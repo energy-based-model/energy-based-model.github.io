@@ -344,7 +344,7 @@
 						<p>Representing a distribution with an EBM is simple: a scalar energy function defines an unnormalized density. This does not require choosing an ordering of the variables or an autoregressive factorization. Diffusion models instead introduce a prescribed noising process and learn noise-conditioned denoising functions or score fields. The representation is simple and flexible, but the partition function is generally intractable and both training and inference can be difficult.</p>
 						<p>A conventional predictor learns a direct map from x to one output. An EBM instead keeps the landscape over possible outputs available at inference time. We can minimize it for one answer, sample several answers, evaluate candidates, or add another energy that expresses a new requirement.</p>
 						<p>Composition refers to this last operation: adding energy functions and then finding an output that has low energy under all of them. For example, a robot planner can combine one energy that represents feasible dynamics with another that represents a new goal.</p>
-						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, gives a summary of our research program: we learn reusable energy landscapes from data, then compose and optimize them at inference time to solve tasks not represented directly in the training set.</p>
+						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, talks about discusses some of the advantages of EBMs: we can learn reusable energy landscapes from data, then compose and optimize them at inference time to solve tasks not represented directly in the training set.</p>
 					</div>
 					<div class="key-points" aria-label="Key properties of energy-based models">
 						<div class="key-point"><strong>Flexible representation</strong><span>A single energy can represent a distribution without a prescribed variable ordering, factorization, or noising process.</span></div>
@@ -359,7 +359,7 @@
 			<div class="container">
 				<div class="section-heading">
 					<h2>Why energy-based models?</h2>
-					<p>An EBM separates the representation of a problem from the procedure used to solve it. That separation is useful in several different ways.</p>
+					<p>An EBM separates the representation of a problem from the procedure used to solve it. This separation is useful in several different ways.</p>
 				</div>
 				<div class="direction-grid">
 					<article class="direction-card">
@@ -367,7 +367,7 @@
 						<p>An energy function only needs to score each configuration. It does not require variables to be generated in a fixed order, as in an autoregressive model, or through a prescribed noising process, as in a diffusion model.</p>
 					</article>
 					<article class="direction-card">
-						<h3>Combine different kinds of knowledge</h3>
+						<h3>Compose different kinds of knowledge</h3>
 						<p>Concepts, relations, dynamics, goals, and constraints can all be expressed as energies over shared variables. Adding their scores creates a new inference problem without retraining the models together.</p>
 					</article>
 					<article class="direction-card">
@@ -375,12 +375,12 @@
 						<p>Each model can score a small part of a problem, while the combined energy defines a larger structured problem. The same local models can be reused across more objects, longer horizons, different graph sizes, or new task layouts.</p>
 					</article>
 					<article class="direction-card">
-						<h3>Keep inference open</h3>
-						<p>We can minimize the energy for one answer, sample it for several possibilities, or combine it with a utility function to make a decision. We can also add constraints or spend more computation at test time without training a new predictor.</p>
+						<h3>Flexible inference-time computation</h3>
+						<p>We can directly minimize the energy for one answer, sample it for several possibilities, or combine it with a utility function to make decisions. We can also add constraints or spend more computation at test time to obtain more accurate answers.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Co-design the landscape and the solver</h3>
-						<p>Learning a useful energy is not enough; optimization or sampling must also be able to reach its low-energy regions. We therefore design the landscape and the inference procedure together, from annealed and corrected sampling to parallel minimization and equilibrium objectives.</p>
+						<p>Learning a useful energy is not enough; optimization or sampling must also be able to reach its low-energy regions. We can explicitly shape the landscape and the inference procedure together, from annealed and corrected sampling to parallel minimization and equilibrium objectives.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Condition in either direction</h3>
