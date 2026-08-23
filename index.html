@@ -131,28 +131,41 @@
 		   (not itself) to keep the hero flush-left with the sections below. */
 		.hero-grid { max-width: none; }
 		.hero-grid > * { max-width: 43.75rem; }
+		/* Keep the explanatory copy in one consistent text style. */
+		.hero-lead, .hero-note, .formula-intro p, .formula-explainer {
+			font-family: var(--sans);
+			font-size: 1.0625rem;
+			font-weight: 400;
+			line-height: 1.7;
+			color: var(--ink);
+		}
 		.hero-lead { margin: 0 0 14px; }
 		.hero-note { margin: 0; }
 		.hero-actions { display: flex; flex-wrap: wrap; gap: 8px 24px; margin: 24px 0 0; font-size: 0.95rem; }
 		.hero-actions a { font-weight: 600; }
 
-		/* Formulas: one consistent block style, stacked like the rest of the page. */
-		.formula-card { margin-top: 40px; padding: 0; border: 0; }
-		.formula-intro { max-width: none; margin-bottom: 20px; }
+		/* Representation first, followed by two parallel inference procedures. */
+		.formula-card { margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+		.formula-intro { max-width: 43.75rem; margin-bottom: 24px; }
 		.formula-intro h2 { margin-bottom: 8px; }
-		.formula-intro p { margin: 0; font-size: 0.98rem; }
-		.inference-grid { display: block; margin: 0; padding: 0; border: 0; }
-		.formula-pair { margin: 16px 0; padding: 14px 20px; border-left: 3px solid var(--accent); background: var(--soft); border-radius: 0 8px 8px 0; }
-		.formula-label { margin: 0 0 6px; color: var(--muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
-		.formula { margin: 0; overflow-x: auto; overflow-y: hidden; color: var(--accent-dark); font-size: 1.05rem; font-weight: 550; white-space: nowrap; }
-		.formula-caption { margin: 8px 0 0; color: var(--muted); font-size: 0.9rem; }
-		.formula-explainer { margin: 16px 0 0; padding: 0; border: 0; font-size: 0.95rem; }
+		.formula-intro p { margin: 0; }
+		.formula-pair { min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; border-radius: 0; }
+		.representation-row { display: grid; grid-template-columns: 10rem minmax(0, 1fr); column-gap: 2rem; padding-top: 18px; border-top: 1px solid var(--line); }
+		.representation-row .formula-label { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding-top: 1px; }
+		.representation-row .formula, .representation-row .formula-caption { grid-column: 2; }
+		.inference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+		.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); padding-left: 2.5rem; }
+		.formula-label { margin: 0 0 7px; color: var(--ink); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+		.formula { margin: 0; overflow: visible; color: var(--accent-dark); font-size: 1.05rem; font-weight: 500; white-space: normal; }
+		.formula-caption { margin: 8px 0 0; color: var(--muted); font-size: 0.95rem; font-weight: 400; }
+		.formula-explainer { max-width: 43.75rem; margin: 18px 0 0; padding-top: 15px; border-top: 1px solid var(--line); }
 
 		.section { padding: 3.5rem 0; border-top: 1px solid var(--line); }
 		.section + .section { border-top: 1px solid var(--line); }
 		.section-heading { max-width: 43.75rem; margin-bottom: 24px; }
 		.section-heading h2 { margin-bottom: 8px; }
-		.section-heading p { margin: 0; color: var(--muted); }
+		.section-heading p { margin: 0; color: var(--muted); font-weight: 400; }
+		#Directions .section-heading p, #Guide .section-heading p { color: var(--ink); }
 		.guide-section, .publications-section, .history-section { background: transparent; }
 
 		/* Overview: copy on the left, key definitions in a right-hand aside. */
@@ -165,21 +178,22 @@
 		.key-point strong { display: block; margin-bottom: 2px; color: var(--ink); font-weight: 650; }
 		.key-point span { font-size: 0.95rem; }
 
-		/* Directions and FAQ: subheading + paragraph, flowing like a blog post. */
-		.direction-grid, .faq-grid { display: block; max-width: 43.75rem; }
-		.direction-card, .faq-item { margin: 0 0 28px; padding: 0; border: 0; min-height: 0; display: block; }
-		.direction-card:last-child, .faq-item:last-child { margin-bottom: 0; }
-		.direction-card p, .faq-item p { flex: none; margin: 0; font-size: 1rem; }
+		/* Parallel ideas are presented as restrained, ruled panels. */
+		.direction-grid, .faq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.25rem 3rem; max-width: none; }
+		.direction-card, .faq-item { min-width: 0; margin: 0; padding: 16px 0 0; border-top: 1px solid var(--line); }
+		.direction-card h3, .faq-item h3 { margin-bottom: 8px; }
+		.direction-card p, .faq-item p { margin: 0; font-size: 1rem; font-weight: 400; }
 
-		/* History: copy on the left, citations in a right-hand aside (same treatment as Overview). */
-		.history-grid { display: grid; grid-template-columns: minmax(0, 1fr) 17.5rem; gap: 1.5rem 3rem; align-items: start; }
+		/* History: copy on the left, compact citations in the right-hand column. */
+		.history-grid { display: grid; grid-template-columns: minmax(0, 1fr) 17.5rem; gap: 1.5rem 3rem; align-items: stretch; }
 		.history-copy p { margin: 0 0 18px; }
-		.reading-list { margin-top: 0; border-top: 2px solid var(--ink); padding-top: 14px; }
-		.reading-list h3 { margin-bottom: 10px; }
-		.reading-list ol { margin: 0; padding-left: 24px; border: 0; list-style: decimal; }
-		.reading-list li { padding: 5px 0; border: 0; font-size: 0.95rem; line-height: 1.6; }
+		.reading-list { display: flex; flex-direction: column; margin-top: 0; border-top: 2px solid var(--ink); padding-top: 12px; }
+		.reading-list h3 { margin-bottom: 9px; font-size: 1.05rem; }
+		.reading-list ol { display: flex; flex: 1; flex-direction: column; justify-content: space-between; margin: 0; padding-left: 1.25rem; border: 0; list-style: decimal; }
+		.reading-list li { padding: 0; border: 0; color: var(--muted); font-size: 0.75rem; line-height: 1.35; }
 		.reading-list li::marker { color: var(--muted); }
-		.reading-list cite { color: var(--ink); font-style: normal; }
+		.reading-list cite { color: var(--ink); font-style: normal; font-weight: 500; }
+		.reading-list cite a { color: var(--accent-dark); }
 
 		/* Publications */
 		.publication-tools { display: block; margin: 24px 0 10px; padding: 0; border: 0; }
@@ -270,7 +284,9 @@
 		@media (max-width: 900px) {
 			.overview-grid, .history-grid { display: block; }
 			.key-points { margin-top: 28px; }
-			.reading-list { margin-top: 28px; }
+			.reading-list { display: block; margin-top: 28px; }
+			.reading-list ol { display: block; }
+			.reading-list li { padding: 1px 0 4px; font-size: 0.9rem; line-height: 1.45; }
 		}
 		@media (max-width: 640px) {
 			html { scroll-padding-top: 110px; }
@@ -280,6 +296,10 @@
 			h1 { font-size: 2rem; }
 			h2 { font-size: 1.4rem; }
 			.section { padding: 44px 0; }
+			.direction-grid, .faq-grid { grid-template-columns: 1fr; gap: 24px; }
+			.representation-row { grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: 1rem; }
+			.inference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+			.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); border-top: 0; padding-top: 0; padding-left: 16px; }
 			.formula { white-space: normal; overflow-wrap: anywhere; }
 			.publication-list > .row { grid-template-columns: 1fr; gap: 14px; padding: 24px 0; }
 			.publication-list .col-md-3, .publication-list .col-md-9, .publication-list .col-md-12 { grid-column: 1; grid-row: auto; }
@@ -300,7 +320,7 @@
 			<div class="nav-links">
 				<a href="#Overview">Overview</a>
 				<a href="#Directions">Why EBMs?</a>
-				<a href="#Guide">Background</a>
+				<a href="#Guide">Properties</a>
 				<a href="#History">History</a>
 				<a href="#Publications">Publications</a>
 			</div>
@@ -319,22 +339,22 @@
 				</p>
 				<div class="formula-card" aria-label="Energy-based representation, MAP optimization, and Langevin sampling">
 					<div class="formula-intro">
-						<h2>From an energy landscape to an output</h2>
+						<h2>Representation and inference</h2>
 						<p>An EBM learns a landscape over possible outputs. The landscape tells us which outputs fit the input, but it does not prescribe how an output must be produced. Below, x is the input and y is a candidate output. We can optimize the landscape for one low-energy solution or approximately sample multiple plausible solutions. Because the representation remains available at inference time, we can also condition it on observed variables or add new energy terms.</p>
 					</div>
-					<div class="formula-pair">
+					<div class="formula-pair representation-row">
 						<p class="formula-label">Representation</p>
 						<p class="formula">p<sub>θ</sub>(y | x) = exp(−E<sub>θ</sub>(x, y)) / Z<sub>θ</sub>(x)</p>
 						<p class="formula-caption">The energy induces a probability distribution: lower-energy outputs receive higher probability, while Z<sub>θ</sub>(x) normalizes the distribution.</p>
 					</div>
 					<div class="inference-grid">
 						<div class="formula-pair">
-							<p class="formula-label">One solution: energy minimization (MAP)</p>
+							<p class="formula-label">One solution: MAP</p>
 							<p class="formula">ŷ = arg min<sub>y</sub> E<sub>θ</sub>(x, y)</p>
 							<p class="formula-caption">Search for the lowest-energy output. In probabilistic terms, this is the maximum a posteriori (MAP) solution.</p>
 						</div>
 						<div class="formula-pair">
-							<p class="formula-label">Multiple solutions: Langevin sampling</p>
+							<p class="formula-label">Multiple solutions: Langevin dynamics</p>
 							<p class="formula">y<sub>t+1</sub> = y<sub>t</sub> − η∇<sub>y</sub>E<sub>θ</sub>(x, y<sub>t</sub>) + √(2η) ε<sub>t</sub></p>
 							<p class="formula-caption">Repeatedly move a candidate toward lower energy while adding noise. Different runs can produce different plausible outputs.</p>
 						</div>
@@ -375,27 +395,27 @@
 				<div class="direction-grid">
 					<article class="direction-card">
 						<h3>Represent complex distributions directly</h3>
-						<p>An energy function only needs to score each configuration. It does not require variables to be generated in a fixed order, as in an autoregressive model, or through a prescribed noising process, as in a diffusion model.</p>
+						<p>An energy function only needs to score a complete configuration. Unlike an autoregressive model, it does not need to generate the variables one at a time in a fixed order. Unlike a diffusion model, it does not require a prescribed process that adds noise and then learns to reverse it.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Compose different kinds of knowledge</h3>
-						<p>Concepts, relations, dynamics, goals, and constraints can all be expressed as energies over shared variables. Adding their scores creates a new inference problem without retraining the models together.</p>
+						<p>Concepts, relations, dynamics, goals, and constraints can all be expressed as energies over the same variables. Adding these energies creates a new landscape whose low-energy solutions must satisfy the components together. We can therefore form a new inference problem without retraining the models jointly.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Reuse structure across scale</h3>
-						<p>Each model can score a small part of a problem, while the combined energy defines a larger structured problem. The same local models can be reused across more objects, longer horizons, different graph sizes, or new task layouts.</p>
+						<p>Each model can score a small part of a problem, while the summed energy defines the full structured problem. A relation learned between two objects can be reused in a scene with many objects, and a local dynamics model can be applied repeatedly across a longer plan. The same models can therefore support different numbers of objects, longer horizons, or new task layouts.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Flexible inference-time computation</h3>
-						<p>We can directly minimize the energy for one answer, sample it for several possibilities, or combine it with a utility function to make decisions. We can also add constraints or spend more computation at test time to obtain more accurate answers.</p>
+						<p>An energy function does not fix a single way of producing an answer. We can minimize it for one solution, sample from it for several possibilities, or combine it with a utility or constraint to make a decision. Harder problems can use more optimization steps or maintain more candidate solutions at inference time.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Co-design the landscape and the solver</h3>
-						<p>Learning a useful energy is not enough; optimization or sampling must also be able to reach its low-energy regions. We can explicitly shape the landscape and the inference procedure together, from annealed and corrected sampling to parallel minimization and equilibrium objectives.</p>
+						<p>A model is useful only if inference can reach its low-energy regions. We can therefore shape the learned landscape together with the solver, so that optimization or sampling can find good solutions rather than merely assign them low energy. Examples include annealed or corrected sampling, parallel minimization, and equilibrium objectives.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Condition in either direction</h3>
-						<p>Because a joint energy scores x and y together, we can fix either variable and infer the other: p(x | y) or p(y | x). The same relational model can generate scenes that satisfy several relations or infer those relations from an observed scene, as in <a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"><em>Learning to Compose Visual Relations</em></a>.</p>
+						<p>If a joint energy scores a pair x and y, we can hold either variable fixed and infer the other: p(x | y) or p(y | x). For example, the same relational model can generate a scene that satisfies several relations or infer the relations present in an observed scene, as in <a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"><em>Learning to Compose Visual Relations</em></a>.</p>
 					</article>
 				</div>
 			</div>
@@ -404,33 +424,33 @@
 		<section class="section guide-section" id="Guide">
 			<div class="container">
 				<div class="section-heading">
-					<h2>Technical connections</h2>
+					<h2>Properties and connections</h2>
 					<p>EBMs connect probabilistic modeling with optimization, sampling, and inference-time computation.</p>
 				</div>
 				<div class="faq-grid">
 					<article class="faq-item">
-						<h3>Are Energy-Based Models generative models?</h3>
-						<p>They can be. An EBM defines an unnormalized density over data, and samples can be produced with MCMC, Langevin dynamics, or another sampling procedure. The same formulation also supports conditional prediction and structured outputs.</p>
+						<h3>EBMs as generative models</h3>
+						<p>When used as a generative model, an EBM assigns greater relative probability to lower-energy data. This defines an unnormalized density: the model specifies relative likelihoods without computing the constant needed to turn them into a probability distribution. MCMC methods such as Langevin dynamics generate samples by repeatedly moving a candidate toward lower energy while adding noise. Conditioning the energy on an input extends the same formulation to conditional generation and structured prediction.</p>
 					</article>
 					<article class="faq-item">
-						<h3>How are EBMs related to diffusion models?</h3>
-						<p>Score-based diffusion models learn gradients of a sequence of log densities. Energy-based parameterizations express these scores as gradients of scalar potentials. In our work, we study both <a href="https://energy-based-model.github.io/reduce-reuse-recycle/">energy-based diffusion samplers</a> and <a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">equilibrium energy landscapes</a>.</p>
+						<h3>Relationship to diffusion models</h3>
+						<p>Diffusion models learn how to move a noisy sample toward more likely data at many noise levels. In an energy-based parameterization, each such direction is given by the negative gradient of a scalar energy function. This connection lets us use energy-based sampling and composition within diffusion models. In our work, we study both <a href="https://energy-based-model.github.io/reduce-reuse-recycle/">energy-based diffusion samplers</a> and <a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">equilibrium energy landscapes</a>.</p>
 					</article>
 					<article class="faq-item">
-						<h3>Why are Energy-Based Models compositional?</h3>
-						<p>To compose EBMs, we add their energies and run inference in the resulting landscape. A solution is preferred only when it is compatible with all the components. Probabilistically, adding energies corresponds to multiplying their unnormalized distributions; in practice, calibration and the sampler still matter.</p>
+						<h3>Composition by adding energies</h3>
+						<p>To compose EBMs, we add their energies and run inference in the resulting landscape. Low energy under the sum favors solutions that are compatible with every component. Probabilistically, adding energies multiplies the models’ relative likelihoods. The result can nevertheless fail if one model’s scores dominate or the sampler cannot reach a region that satisfies the components together.</p>
 					</article>
 					<article class="faq-item">
-						<h3>Why use EBMs for reasoning and planning?</h3>
-						<p>An energy function can score candidate solutions or trajectories. Inference then searches for a low-energy answer, allowing harder problems to use more optimization steps or particles and new goals to enter as additional terms.</p>
+						<h3>Inference for reasoning and planning</h3>
+						<p>An energy function can score candidate answers or trajectories without generating them in one pass. Inference searches across candidates and refines the low-energy ones. Harder problems can use more optimization steps or maintain several candidates in parallel, while new goals or constraints can enter as additional energy terms.</p>
 					</article>
 					<article class="faq-item">
-						<h3>When does composition generalize?</h3>
-						<p>Composition is most reliable when each factor remains valid on the local configurations it evaluates and the factors use compatible variables, scales, and semantics. The global combination may be new, but this does not imply arbitrary out-of-distribution generalization.</p>
+						<h3>Conditions for compositional generalization</h3>
+						<p>Composition is most reliable when each model is used on local situations it understands and the models agree on the meaning and scale of their shared variables. For example, combining a dynamics model with a new goal is safer when the resulting trajectory remains within states covered by the dynamics model. The global combination may be new, but its individual components should not be arbitrary out-of-distribution inputs.</p>
 					</article>
 					<article class="faq-item">
-						<h3>What are the main limitations?</h3>
-						<p>The partition function is often intractable, while optimization and MCMC can be slow or sensitive to initialization. Combining energies may introduce local minima or expose calibration and support mismatches between models.</p>
+						<h3>Computational and compositional limitations</h3>
+						<p>These advantages depend on effective inference. Computing exact probabilities often requires a partition function—a sum or integral over all possible outputs—that is too expensive to evaluate. Optimization and MCMC can also be slow or sensitive to initialization. When several energies are composed, one component may dominate, the combined landscape may contain new local minima, or the component models may be unreliable in different regions.</p>
 					</article>
 				</div>
 			</div>
