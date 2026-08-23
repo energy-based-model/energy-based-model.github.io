@@ -1,1 +1,1231 @@
-<meta http-equiv="Refresh" content="0; url='https://energy-based-model.github.io/Energy-based-Model-MIT/'" />
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Energy-Based Models: Representation, Inference, and Composition</title>
+	<meta name="description" content="Yilun Du's overview of energy-based models as reusable energy landscapes for MAP optimization, Langevin sampling, composition, reasoning, and planning.">
+	<meta name="keywords" content="energy-based models, EBM machine learning, energy-based generative models, compositional energy-based models, energy minimization, Langevin dynamics, contrastive divergence, diffusion models, inference-time reasoning, model-based planning">
+	<meta name="author" content="Yilun Du">
+	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+	<meta name="theme-color" content="#fdfdfb">
+	<link rel="canonical" href="https://energy-based-model.github.io/">
+	<link rel="sitemap" type="application/xml" href="https://energy-based-model.github.io/sitemap.xml">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Energy-Based Models">
+	<meta property="og:title" content="Energy-Based Models: Representation, Inference, and Composition">
+	<meta property="og:description" content="Yilun Du's overview of energy-based models as reusable energy landscapes for MAP optimization, Langevin sampling, composition, reasoning, and planning.">
+	<meta property="og:url" content="https://energy-based-model.github.io/">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Energy-Based Models: Representation, Inference, and Composition">
+	<meta name="twitter:description" content="Yilun Du's overview of energy-based models as reusable energy landscapes for MAP optimization, Langevin sampling, composition, reasoning, and planning.">
+	<script type="application/ld+json">
+	{
+	  "@context": "https://schema.org",
+	  "@type": "CollectionPage",
+	  "@id": "https://energy-based-model.github.io/#collection",
+	  "name": "Energy-Based Models: Representation, Inference, and Composition",
+	  "url": "https://energy-based-model.github.io/",
+	  "description": "Yilun Du's overview of energy-based models as reusable energy landscapes for MAP optimization, Langevin sampling, composition, reasoning, and planning.",
+	  "dateModified": "2026-08-23",
+	  "isPartOf": {"@type": "WebSite", "@id": "https://energy-based-model.github.io/#website", "name": "Energy-Based Models", "url": "https://energy-based-model.github.io/"},
+	  "about": [
+	    {"@type": "Thing", "name": "Energy-based models"},
+	    {"@type": "Thing", "name": "Generative modeling"},
+	    {"@type": "Thing", "name": "Compositional reasoning"},
+	    {"@type": "Thing", "name": "Inference-time reasoning"},
+	    {"@type": "Thing", "name": "Robot planning"}
+	  ],
+	  "author": {"@type": "Person", "name": "Yilun Du", "url": "https://yilundu.github.io/"}
+	}
+	</script>
+	<style>
+		:root {
+			--ink: #202421;
+			--muted: #616763;
+			--paper: #fdfdfb;
+			--surface: #ffffff;
+			--line: #d8dcd8;
+			--accent: #1e5d4a;
+			--accent-dark: #153f34;
+			--serif: Georgia, "Times New Roman", serif;
+			--sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		* { box-sizing: border-box; }
+		html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+		body {
+			margin: 0;
+			color: var(--ink);
+			background: var(--paper);
+			font-family: var(--sans);
+			font-size: 16px;
+			line-height: 1.62;
+			-webkit-font-smoothing: antialiased;
+		}
+		a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+		a:hover { color: var(--accent-dark); }
+		img, video { display: block; max-width: 100%; }
+		button, input { font: inherit; }
+		.sr-only {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+		}
+		.skip-link {
+			position: fixed;
+			left: 16px;
+			top: 10px;
+			z-index: 100;
+			padding: 8px 12px;
+			background: var(--surface);
+			border: 1px solid var(--line);
+			transform: translateY(-160%);
+		}
+		.skip-link:focus { transform: translateY(0); }
+		.container { width: min(1020px, calc(100% - 48px)); margin: 0 auto; }
+
+		.site-nav {
+			position: sticky;
+			top: 0;
+			z-index: 50;
+			border-bottom: 1px solid var(--line);
+			background: rgba(253, 253, 251, 0.97);
+		}
+		.nav-inner {
+			min-height: 58px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 24px;
+		}
+		.site-brand {
+			color: var(--ink);
+			font-family: var(--serif);
+			font-size: 1.04rem;
+			font-weight: 700;
+			text-decoration: none;
+		}
+		.nav-links { display: flex; align-items: center; gap: 20px; }
+		.nav-links a { color: var(--muted); font-size: 0.86rem; text-decoration: none; }
+		.nav-links a:hover { color: var(--ink); }
+
+		.hero {
+			padding: 70px 0 56px;
+			border-bottom: 1px solid var(--line);
+			background: var(--paper);
+		}
+		.hero-grid { max-width: 860px; }
+		h1, h2, h3 { margin-top: 0; color: var(--ink); font-family: var(--serif); font-weight: 600; line-height: 1.2; }
+		h1 { margin-bottom: 12px; font-size: clamp(2.65rem, 6vw, 3.75rem); letter-spacing: -0.035em; }
+		.hero-lead { max-width: 800px; margin: 0; font-family: var(--serif); font-size: clamp(1.18rem, 2.2vw, 1.38rem); line-height: 1.55; }
+		.hero-note { max-width: 760px; margin: 18px 0 0; color: var(--muted); }
+		.hero-actions { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 24px 0 0; font-size: 0.9rem; }
+		.hero-actions a { font-weight: 600; }
+		.formula-card {
+			margin-top: 32px;
+			padding: 20px 0;
+			border-top: 1px solid var(--line);
+			border-bottom: 1px solid var(--line);
+		}
+		.formula-intro { max-width: 760px; margin-bottom: 20px; }
+		.formula-intro h2 { margin-bottom: 7px; font-size: 1.24rem; letter-spacing: -0.008em; }
+		.formula-intro p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+		.inference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+		.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); padding-left: 38px; }
+		.formula-label { margin: 0 0 7px; color: var(--muted); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+		.formula { margin: 0; overflow-x: auto; overflow-y: hidden; color: var(--accent-dark); font-family: var(--serif); font-size: clamp(1.08rem, 2.15vw, 1.42rem); white-space: nowrap; }
+		.formula-caption { margin: 8px 0 0; color: var(--muted); font-size: 0.86rem; }
+		.formula-explainer { margin: 18px 0 0; padding-top: 15px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.88rem; }
+
+		.section { padding: 64px 0; }
+		.section + .section { border-top: 1px solid var(--line); }
+		.section-heading { max-width: 720px; margin-bottom: 30px; }
+		.section-heading h2 { margin-bottom: 10px; font-size: clamp(1.8rem, 4vw, 2.35rem); letter-spacing: -0.018em; }
+		.section-heading p { margin: 0; color: var(--muted); font-size: 1rem; }
+		.overview-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr); gap: 58px; }
+		.overview-copy p { margin: 0 0 18px; }
+		.key-points { display: grid; }
+		.key-point { padding: 14px 0 16px; border-top: 1px solid var(--line); }
+		.key-point strong { display: block; margin-bottom: 3px; color: var(--accent-dark); }
+		.key-point span { color: var(--muted); font-size: 0.92rem; }
+		.direction-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 46px; }
+		.direction-card { display: flex; flex-direction: column; min-height: 158px; padding: 18px 0 4px; border-top: 1px solid var(--ink); }
+		.direction-card h3 { margin-bottom: 8px; font-size: 1.22rem; }
+		.direction-card p { flex: 1; margin: 0; color: var(--muted); font-size: 0.94rem; }
+		.guide-section { background: var(--paper); }
+		.faq-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 46px; }
+		.faq-item { padding: 17px 0 0; border-top: 1px solid var(--line); }
+		.faq-item h3 { margin-bottom: 8px; font-size: 1.12rem; }
+		.faq-item p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+		.history-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(290px, 0.85fr); gap: 58px; align-items: start; }
+		.history-copy p { margin: 0 0 18px; }
+		.history-copy p:last-child { margin-bottom: 0; }
+		.reading-list h3 { margin-bottom: 10px; font-size: 1.22rem; }
+		.reading-list ol { margin: 0; padding: 0; border-top: 1px solid var(--ink); list-style: none; }
+		.reading-list li { padding: 13px 0 14px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+		.reading-list cite { color: var(--ink); font-style: normal; }
+
+		.publications-section { background: var(--surface); }
+		.publication-tools { display: grid; grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr); gap: 28px; align-items: end; margin: 26px 0 14px; padding: 17px 0 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+		.search-wrap label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+		.search-input {
+			width: 100%;
+			min-height: 40px;
+			padding: 8px 10px;
+			border: 1px solid #8a928c;
+			border-radius: 0;
+			background: var(--surface);
+			color: var(--ink);
+			outline: none;
+		}
+		.search-input:focus { border-color: var(--accent); outline: 2px solid rgba(30, 93, 74, 0.12); outline-offset: 1px; }
+		.filters { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 17px; }
+		.filter-button {
+			min-height: 34px;
+			padding: 6px 0 4px;
+			border: 0;
+			border-bottom: 2px solid transparent;
+			background: transparent;
+			color: var(--muted);
+			cursor: pointer;
+			font-size: 0.82rem;
+		}
+		.filter-button:hover, .filter-button.active { border-bottom-color: var(--accent); color: var(--accent-dark); }
+		.filter-button.active { font-weight: 700; }
+		.result-count { min-height: 25px; margin: 0; color: var(--muted); font-size: 0.84rem; }
+		.publication-list { display: grid; gap: 0; margin-top: 8px; }
+		.publication-list > .row {
+			display: grid;
+			grid-template-columns: 170px minmax(0, 1fr);
+			gap: 0 28px;
+			padding: 25px 0 27px;
+			border-top: 1px solid var(--line);
+			background: var(--surface);
+		}
+		.publication-list > .row:last-of-type { border-bottom: 1px solid var(--line); }
+		.publication-list > .row.is-hidden { display: none; }
+		.publication-list .col-md-3 { grid-column: 1; grid-row: 1 / span 3; min-width: 0; }
+		.publication-list .col-md-9 { grid-column: 2; min-width: 0; }
+		.publication-list .col-md-12 { grid-column: 2; min-width: 0; }
+		.publication-list img, .publication-list video {
+			width: 100%;
+			aspect-ratio: 4 / 3;
+			border: 1px solid var(--line) !important;
+			border-radius: 0;
+			background: #f4f5f3;
+			object-fit: contain;
+		}
+		.paper-title { margin: 0 0 7px; font-size: clamp(1.13rem, 2vw, 1.27rem); letter-spacing: -0.008em; }
+		.award { color: #8f1f16; }
+		.publication-list .col-md-9 { font-size: 0.9rem; }
+		.publication-list .col-md-9 > b { font-size: 0.88rem; }
+		.publication-list .col-md-9 > a small {
+			display: inline-block;
+			margin: 7px 7px 0 0;
+			padding: 0;
+			font-size: 0.8rem;
+			font-weight: 600;
+		}
+		.paper-topics { display: flex; flex-wrap: wrap; gap: 0; margin: 11px 0 0; }
+		.topic-chip { color: var(--muted); font-size: 0.78rem; }
+		.topic-chip:not(:last-child)::after { content: " · "; margin: 0 6px; color: #9aa09c; }
+		.paper-abstract { margin-top: 12px; padding-top: 0; }
+		.paper-abstract p { max-width: 78ch; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.55; }
+		.paper-abstract .summary-preview { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+		.paper-abstract .summary-preview[hidden], .paper-abstract .summary-full[hidden] { display: none; }
+		.abstract-toggle { margin-top: 8px; padding: 0; border: 0; background: transparent; color: var(--accent); cursor: pointer; font-size: 0.79rem; font-weight: 600; }
+		.abstract-toggle:hover { color: var(--accent-dark); text-decoration: underline; text-underline-offset: 3px; }
+		.publication-list hr { display: none; }
+		.empty-state { display: none; padding: 26px 0; border-top: 1px solid var(--line); color: var(--muted); }
+		.empty-state.visible { display: block; }
+
+		.site-footer { padding: 20px 0 26px; border-top: 1px solid var(--line); background: var(--paper); color: var(--muted); font-size: 0.78rem; }
+		.site-footer p { margin: 0; }
+
+		@media (max-width: 960px) {
+			.publication-tools { grid-template-columns: 1fr; }
+			.filters { justify-content: flex-start; }
+		}
+		@media (max-width: 720px) {
+			html { scroll-padding-top: 120px; }
+			.container { width: min(100% - 30px, 1020px); }
+			.nav-inner { align-items: flex-start; flex-direction: column; gap: 6px; padding: 12px 0; }
+			.nav-links { width: 100%; flex-wrap: wrap; gap: 7px 16px; overflow-x: visible; padding-bottom: 2px; }
+			.nav-links a { white-space: nowrap; }
+			.hero { padding: 50px 0 44px; }
+			.inference-grid { grid-template-columns: 1fr; gap: 18px; }
+			.inference-grid .formula-pair + .formula-pair { border-left: 0; border-top: 1px solid var(--line); padding-top: 18px; padding-left: 0; }
+			.formula { overflow-x: visible; font-size: 1rem; line-height: 1.45; white-space: normal; overflow-wrap: anywhere; }
+			.section { padding: 50px 0; }
+			.overview-grid, .direction-grid, .faq-grid, .history-grid { grid-template-columns: 1fr; }
+			.overview-grid { gap: 24px; }
+			.direction-grid, .faq-grid, .history-grid { gap: 24px; }
+			.direction-card { min-height: 0; }
+			.publication-tools { gap: 14px; }
+			.publication-list > .row { grid-template-columns: 1fr; gap: 17px; padding: 23px 0 25px; }
+			.publication-list .col-md-3, .publication-list .col-md-9, .publication-list .col-md-12 { grid-column: 1; grid-row: auto; }
+			.publication-list .col-md-3 { max-width: 300px; }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			html { scroll-behavior: auto; }
+			*, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
+		}
+	</style>
+</head>
+
+<body id="Home">
+	<a class="skip-link" href="#main-content">Skip to content</a>
+	<nav class="site-nav" aria-label="Primary navigation">
+		<div class="container nav-inner">
+			<a class="site-brand" href="#Home">Energy-Based Models</a>
+			<div class="nav-links">
+				<a href="#Overview">Overview</a>
+				<a href="#Directions">Why EBMs?</a>
+				<a href="#Guide">Background</a>
+				<a href="#History">History</a>
+				<a href="#Publications">Publications</a>
+			</div>
+		</div>
+	</nav>
+
+	<main id="main-content">
+		<header class="hero">
+			<div class="container hero-grid">
+				<h1>Energy-Based Models</h1>
+				<p class="hero-lead">Energy-based models assign a numerical score, called energy, to each candidate solution. Lower energy means that a candidate better fits the input or constraints. Rather than producing an answer in one fixed way, an EBM learns a landscape that can be optimized for one solution or sampled for several plausible solutions. We can also compose models by adding their energies, then search for a solution that satisfies them together.</p>
+				<p class="hero-note">Our research studies how to learn reusable energy landscapes, then adapt, compose, and search them at inference time for structured generalization in generation, reasoning, and planning.</p>
+				<p class="hero-actions">
+					<a href="#Publications">Browse publications ↓</a>
+					<a href="https://arxiv.org/abs/1903.08689">Implicit generation with EBMs (2019) ↗</a>
+				</p>
+				<div class="formula-card" aria-label="Energy-based representation, MAP optimization, and Langevin sampling">
+					<div class="formula-intro">
+						<h2>From an energy landscape to an output</h2>
+						<p>An EBM learns a landscape over possible outputs. The landscape tells us which outputs fit the input, but it does not prescribe how an output must be produced. Below, x is the input and y is a candidate output. We can optimize the landscape for one low-energy solution or approximately sample multiple plausible solutions. Because the representation remains available at inference time, we can also condition it on observed variables or add new energy terms.</p>
+					</div>
+					<div class="formula-pair">
+						<p class="formula-label">Representation</p>
+						<p class="formula">p<sub>θ</sub>(y | x) = exp(−E<sub>θ</sub>(x, y)) / Z<sub>θ</sub>(x)</p>
+						<p class="formula-caption">The energy induces a probability distribution: lower-energy outputs receive higher probability, while Z<sub>θ</sub>(x) normalizes the distribution.</p>
+					</div>
+					<div class="inference-grid">
+						<div class="formula-pair">
+							<p class="formula-label">One solution: energy minimization (MAP)</p>
+							<p class="formula">ŷ = arg min<sub>y</sub> E<sub>θ</sub>(x, y)</p>
+							<p class="formula-caption">Search for the lowest-energy output. In probabilistic terms, this is the maximum a posteriori (MAP) solution.</p>
+						</div>
+						<div class="formula-pair">
+							<p class="formula-label">Multiple solutions: Langevin sampling</p>
+							<p class="formula">y<sub>t+1</sub> = y<sub>t</sub> − η∇<sub>y</sub>E<sub>θ</sub>(x, y<sub>t</sub>) + √(2η) ε<sub>t</sub></p>
+							<p class="formula-caption">Repeatedly move a candidate toward lower energy while adding noise. Different runs can produce different plausible outputs.</p>
+						</div>
+					</div>
+					<p class="formula-explainer">Both procedures use the same learned energy function. MAP is useful when one best solution is needed; Langevin dynamics approximately explores the distribution and can produce diverse samples.</p>
+				</div>
+			</div>
+		</header>
+
+		<section class="section" id="Overview">
+			<div class="container">
+				<div class="section-heading">
+					<h2>What is an energy-based model?</h2>
+				</div>
+				<div class="overview-grid">
+					<div class="overview-copy">
+						<p>An EBM assigns an energy E<sub>θ</sub>(x, y) to every candidate output y given an input x. This energy induces a conditional Boltzmann distribution p<sub>θ</sub>(y | x), where the partition function Z<sub>θ</sub>(x) normalizes the probability over all possible outputs.</p>
+						<p>Representing a distribution with an EBM is simple: a scalar energy function defines an unnormalized density. This does not require choosing an ordering of the variables or an autoregressive factorization. Diffusion models instead introduce a prescribed noising process and learn noise-conditioned denoising functions or score fields. The representation is simple and flexible, but the partition function is generally intractable and both training and inference can be difficult.</p>
+						<p>A conventional predictor learns a direct map from x to one output. An EBM instead keeps the landscape over possible outputs available at inference time. We can minimize it for one answer, sample several answers, evaluate candidates, or add another energy that expresses a new requirement.</p>
+						<p>Composition refers to this last operation: adding energy functions and then finding an output that has low energy under all of them. For example, a robot planner can combine one energy that represents feasible dynamics with another that represents a new goal.</p>
+						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, gives a summary of our research program: we learn reusable energy landscapes from data, then compose and optimize them at inference time to solve tasks not represented directly in the training set.</p>
+					</div>
+					<div class="key-points" aria-label="Key properties of energy-based models">
+						<div class="key-point"><strong>Flexible representation</strong><span>A single energy can represent a distribution without a prescribed variable ordering, factorization, or noising process.</span></div>
+						<div class="key-point"><strong>Multiple inference procedures</strong><span>The same landscape supports optimization, sampling, and decision-making under a utility or constraint.</span></div>
+						<div class="key-point"><strong>Composition</strong><span>Add energy functions and search for a solution that satisfies them together—for example, a trajectory that follows learned dynamics and reaches a new goal.</span></div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="section" id="Directions">
+			<div class="container">
+				<div class="section-heading">
+					<h2>Why energy-based models?</h2>
+					<p>An EBM separates the representation of a problem from the procedure used to solve it. That separation is useful in several different ways.</p>
+				</div>
+				<div class="direction-grid">
+					<article class="direction-card">
+						<h3>Represent complex distributions directly</h3>
+						<p>An energy function only needs to score each configuration. It does not require variables to be generated in a fixed order, as in an autoregressive model, or through a prescribed noising process, as in a diffusion model.</p>
+					</article>
+					<article class="direction-card">
+						<h3>Combine different kinds of knowledge</h3>
+						<p>Concepts, relations, dynamics, goals, and constraints can all be expressed as energies over shared variables. Adding their scores creates a new inference problem without retraining the models together.</p>
+					</article>
+					<article class="direction-card">
+						<h3>Reuse structure across scale</h3>
+						<p>Each model can score a small part of a problem, while the combined energy defines a larger structured problem. The same local models can be reused across more objects, longer horizons, different graph sizes, or new task layouts.</p>
+					</article>
+					<article class="direction-card">
+						<h3>Keep inference open</h3>
+						<p>We can minimize the energy for one answer, sample it for several possibilities, or combine it with a utility function to make a decision. We can also add constraints or spend more computation at test time without training a new predictor.</p>
+					</article>
+					<article class="direction-card">
+						<h3>Co-design the landscape and the solver</h3>
+						<p>Learning a useful energy is not enough; optimization or sampling must also be able to reach its low-energy regions. We therefore design the landscape and the inference procedure together, from annealed and corrected sampling to parallel minimization and equilibrium objectives.</p>
+					</article>
+					<article class="direction-card">
+						<h3>Condition in either direction</h3>
+						<p>Because a joint energy scores x and y together, we can fix either variable and infer the other: p(x | y) or p(y | x). The same relational model can generate scenes that satisfy several relations or infer those relations from an observed scene, as in <a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"><em>Learning to Compose Visual Relations</em></a>.</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="section guide-section" id="Guide">
+			<div class="container">
+				<div class="section-heading">
+					<h2>Technical connections</h2>
+					<p>EBMs connect probabilistic modeling with optimization, sampling, and inference-time computation.</p>
+				</div>
+				<div class="faq-grid">
+					<article class="faq-item">
+						<h3>Are energy-based models generative models?</h3>
+						<p>They can be. An EBM defines an unnormalized density over data, and samples can be produced with MCMC, Langevin dynamics, or another sampling procedure. The same formulation also supports conditional prediction and structured outputs.</p>
+					</article>
+					<article class="faq-item">
+						<h3>How are EBMs related to diffusion models?</h3>
+						<p>Score-based diffusion models learn gradients of a sequence of log densities. Energy-based parameterizations express these scores as gradients of scalar potentials. In our work, we study both <a href="https://energy-based-model.github.io/reduce-reuse-recycle/">energy-based diffusion samplers</a> and <a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">equilibrium energy landscapes</a>.</p>
+					</article>
+					<article class="faq-item">
+						<h3>Why are energy-based models compositional?</h3>
+						<p>To compose EBMs, we add their energies and run inference in the resulting landscape. A solution is preferred only when it is compatible with all the components. Probabilistically, adding energies corresponds to multiplying their unnormalized distributions; in practice, calibration and the sampler still matter.</p>
+					</article>
+					<article class="faq-item">
+						<h3>Why use EBMs for reasoning and planning?</h3>
+						<p>An energy function can score candidate solutions or trajectories. Inference then searches for a low-energy answer, allowing harder problems to use more optimization steps or particles and new goals to enter as additional terms.</p>
+					</article>
+					<article class="faq-item">
+						<h3>When does composition generalize?</h3>
+						<p>Composition is most reliable when each factor remains valid on the local configurations it evaluates and the factors use compatible variables, scales, and semantics. The global combination may be new, but this does not imply arbitrary out-of-distribution generalization.</p>
+					</article>
+					<article class="faq-item">
+						<h3>What are the main limitations?</h3>
+						<p>The partition function is often intractable, while optimization and MCMC can be slow or sensitive to initialization. Combining energies may introduce local minima or expose calibration and support mismatches between models.</p>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="section history-section" id="History">
+			<div class="container">
+				<div class="section-heading">
+					<h2>Historical context</h2>
+				</div>
+				<div class="history-grid">
+					<div class="history-copy">
+						<p>Energy-based models borrow a simple idea from statistical physics: represent each configuration with a scalar energy, so that lower-energy configurations are more probable or more compatible. <a href="https://authors.library.caltech.edu/records/w41x7-8bn13" target="_blank" rel="noopener noreferrer">Hopfield networks</a> used an energy landscape to describe attractor dynamics and associative memory. <a href="https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog0901_7" target="_blank" rel="noopener noreferrer">Boltzmann machines</a> made these dynamics stochastic and showed how an energy function could be learned from data.</p>
+						<p>Later work developed more practical and general ways to learn energy functions. Hinton’s <a href="https://www.cs.toronto.edu/~hinton/absps/tr00-004.pdf" target="_blank" rel="noopener noreferrer"><em>Products of Experts</em></a> introduced contrastive divergence for training product-form latent-variable models. <a href="https://www.jmlr.org/papers/v6/hyvarinen05a.html" target="_blank" rel="noopener noreferrer">Score matching</a> and <a href="https://proceedings.mlr.press/v9/gutmann10a.html" target="_blank" rel="noopener noreferrer">noise-contrastive estimation</a> provided other ways to learn unnormalized densities without directly evaluating the partition function. <a href="https://cs.nyu.edu/~yann/research/ebm/" target="_blank" rel="noopener noreferrer">LeCun et al.</a> presented energy-based learning as a general framework for prediction and structured-output problems: an energy function scores candidate outputs conditioned on an input, and inference selects or searches for a low-energy output. Their tutorial therefore does cover inference-time prediction with EBMs, although primarily through optimization or discrete search over candidate outputs rather than through the MCMC-based sampling of continuous neural EBMs emphasized in later generative work.</p>
+						<p>In <a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener noreferrer">our 2019 paper</a>, we showed that MCMC-based training of continuous neural EBMs could scale to high-dimensional images and robotic trajectories, using Langevin dynamics for both learning and generation. We also studied compositional generation, reconstruction, robustness, continual learning, and trajectory prediction. The later work on this page develops one part of this picture further: energy functions as reusable representations that can be optimized, conditioned, and composed at inference time.</p>
+					</div>
+					<aside class="reading-list" aria-labelledby="FurtherReading">
+						<h3 id="FurtherReading">Further reading</h3>
+						<ol>
+							<li>J. J. Hopfield (1982), <cite><a href="https://authors.library.caltech.edu/records/w41x7-8bn13" target="_blank" rel="noopener noreferrer">Neural Networks and Physical Systems with Emergent Collective Computational Abilities</a></cite>. Energy landscapes, attractor dynamics, and associative memory.</li>
+							<li>David Ackley, Geoffrey Hinton, and Terrence Sejnowski (1985), <cite><a href="https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog0901_7" target="_blank" rel="noopener noreferrer">A Learning Algorithm for Boltzmann Machines</a></cite>. Stochastic energy-based networks and learning.</li>
+							<li>Geoffrey Hinton (2002), <cite><a href="https://www.cs.toronto.edu/~hinton/absps/tr00-004.pdf" target="_blank" rel="noopener noreferrer">Training Products of Experts by Minimizing Contrastive Divergence</a></cite>. Product-form latent-variable models and contrastive divergence.</li>
+							<li>Aapo Hyvärinen (2005), <cite><a href="https://www.jmlr.org/papers/v6/hyvarinen05a.html" target="_blank" rel="noopener noreferrer">Estimation of Non-Normalized Statistical Models by Score Matching</a></cite>. Learning unnormalized densities through their log-density gradients.</li>
+							<li>Yann LeCun et al. (2006), <cite><a href="https://cs.nyu.edu/~yann/research/ebm/" target="_blank" rel="noopener noreferrer">A Tutorial on Energy-Based Learning</a></cite>. Energy-based prediction through inference over candidate outputs, including optimization and search for low-energy configurations.</li>
+							<li>Michael Gutmann and Aapo Hyvärinen (2010), <cite><a href="https://proceedings.mlr.press/v9/gutmann10a.html" target="_blank" rel="noopener noreferrer">Noise-Contrastive Estimation</a></cite>. Learning unnormalized models by distinguishing data from noise.</li>
+							<li>Yilun Du and Igor Mordatch (2019), <cite><a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener noreferrer">Implicit Generation and Generalization in Energy-Based Models</a></cite>. Scaling continuous neural EBMs and Langevin sampling to high-dimensional generation, composition, and generalization.</li>
+						</ol>
+					</aside>
+				</div>
+			</div>
+		</section>
+
+		<section class="section publications-section" id="Publications">
+			<div class="container">
+				<div class="section-heading">
+					<h2>Publications</h2>
+				</div>
+				<div class="publication-tools">
+					<div class="search-wrap">
+						<label for="publication-search">Search publications</label>
+						<input class="search-input" id="publication-search" type="search" placeholder="Search titles, authors, venues, or topics" autocomplete="off">
+					</div>
+						<div class="filters" role="group" aria-label="Filter publications by topic">
+						<button class="filter-button active" type="button" data-filter="all" aria-pressed="true">All</button>
+						<button class="filter-button" type="button" data-filter="generation" aria-pressed="false">Generative modeling</button>
+						<button class="filter-button" type="button" data-filter="composition" aria-pressed="false">Composition</button>
+						<button class="filter-button" type="button" data-filter="reasoning" aria-pressed="false">Reasoning &amp; planning</button>
+						<button class="filter-button" type="button" data-filter="learning" aria-pressed="false">Learning &amp; adaptation</button>
+					</div>
+				</div>
+				<p class="result-count" id="publication-count" aria-live="polite"></p>
+				<noscript><p class="result-count">All publications are shown below. Enable JavaScript to use search and topic filters.</p></noscript>
+				<div class="publication-list" id="publication-list" role="list">
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/25-eqm/eqm.png" style="border:1px solid black" alt="Equilibrium Matching generative samples" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models</h3>
+            <a href="https://scholar.google.com/citations?user=KuFJC30AAAAJ&amp;hl=en">Runqian Wang</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">arXiv 2025</a></b> <br>
+			<a href="https://raywang4.github.io/equilibrium_matching/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2510.02300"> <small>[Paper]</small></a>
+			<a href="https://github.com/raywang4/EqM"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. Through this approach, we can adopt an optimization-based sampling process at inference time, where samples are obtained by gradient descent on the learned landscape with adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with a unified equilibrium landscape, EqM offers a tighter bridge between flow and energy-based models and a simple route to optimization-driven inference. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/25-pem/comp_reasoning.gif" style="border:1px solid black" alt="Compositional energy minimization for reasoning" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Generalizable Reasoning through Compositional Energy Minimization</h3>
+            <a href="https://www.linkedin.com/in/alexoarga/?locale=en_US">Alexandru Oarga</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://neurips.cc/" target="_blank" rel="noopener noreferrer">NeurIPS 2025</a></b> <br>
+			<a href="https://alexoarga.github.io/compositional_reasoning/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2510.20607"> <small>[Paper]</small></a>
+			<a href="https://github.com/alexOarga/compositional_reasoning"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Generalization is a key challenge in machine learning, specifically in reasoning tasks, where models are expected to solve problems more complex than those encountered during training. Existing approaches typically train reasoning models in an end-to-end fashion, directly mapping input instances to solutions. While this allows models to learn useful heuristics from data, it often results in limited generalization beyond the training distribution. In this work, we propose a novel approach to reasoning generalization by learning energy landscapes over the solution spaces of smaller, more tractable subproblems. At test time, we construct a global energy landscape for a given problem by combining the energy functions of multiple subproblems. This compositional approach enables the incorporation of additional constraints during inference, allowing the construction of energy landscapes for problems of increasing difficulty. To improve the sample quality from this newly constructed energy landscape, we introduce Parallel Energy Minimization (PEM). We evaluate our approach on a wide set of reasoning problems. Our method outperforms existing state-of-the-art methods, demonstrating its ability to generalize to larger and more complex problems. </p>
+			</div>
+
+		</div><hr>
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/25-ebt/ebt.png" style="border:1px solid black" alt="Energy-Based Transformer architecture and inference" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Energy-Based Transformers are Scalable Learners and Thinkers</h3>
+			<a href="https://alexiglad.github.io/">Alexi Gladstone</a>,
+			<a href="https://nanduruganesh.github.io/">Ganesh Nanduru</a>,
+			<a href="https://mmiakashs.github.io/">Md Mofijul Islam</a>,
+			<a href="https://hanpx20.github.io/">Peixuan Han</a>,
+			<a href="https://hyeonjeongha.github.io/">Hyeonjeong Ha</a>,
+			<a href="https://aman.info/">Aman Chadha</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>,
+            <a href="https://blender.cs.illinois.edu/hengji.html">Heng Ji</a>,
+            <a href="https://jundongli.github.io/">Jundong Li</a>,
+            <a href="https://www.tiqbal.com/">Tariq Iqbal</a>
+            <br>
+			<b><a href="https://arxiv.org/abs/2507.02092" target="_blank" rel="noopener noreferrer">arXiv 2025</a></b> <br>
+			<a href="https://energy-based-transformers.github.io/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2507.02092"> <small>[Paper]</small></a>
+			<a href="https://alexiglad.github.io/blog/2025/ebt/"> <small>[Blog]</small></a>
+			<a href="https://github.com/alexiglad/EBT"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Inference-time computation techniques, analogous to human System 2 Thinking, have recently become popular for improving model performances. However, most existing approaches suffer from several limitations: they are modality-specific (e.g., working only in text), problem-specific (e.g., verifiable domains like math and coding), or require additional supervision/training on top of unsupervised
+pretraining (e.g., verifiers or verifiable rewards). In this paper, we ask the question “Is it possible to generalize these System 2 Thinking approaches, and develop models that learn to think solely from unsupervised learning?” Interestingly, we find the answer is yes, by learning to explicitly verify the compatibility between inputs and candidate-predictions, and then re-framing prediction problems as optimization
+with respect to this verifier. Specifically, we train Energy-Based Transformers (EBTs)—a new class of Energy-Based Models (EBMs)—to assign an energy (unnormalized probability) value to every input and candidate-prediction pair, enabling predictions through gradient descent-based energy minimization until convergence. This formulation enables System 2 Thinking to emerge from unsupervised learning, making it modality and problem agnostic. Across both discrete (text) and continuous (visual) modalities, we find EBTs scale faster than the dominant Transformer++ approach during training, achieving an up to 35% higher scaling rate with respect to data, batch size, parameters, FLOPs, and depth. During inference, EBTs improve performance with System 2 Thinking (i.e., extra computation) by 29%
+more than the Transformer++ on language tasks, and EBTs outperform Diffusion Transformers on image denoising while using fewer forward passes. Further, we find that System 2 Thinking with EBTs yields larger performance improvements on data that is farther out-of-distribution, and that EBTs achieve better results than existing models on most downstream tasks given the same or worse pretraining performance, suggesting that EBTs generalize better than existing approaches. Consequently, EBTs are a promising new paradigm for scaling both the learning and thinking capabilities of models. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/25-inverse/comp_igm.png" style="border:1px solid black" alt="Compositional inverse generative modeling" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Compositional Scene Understanding through Inverse Generative Modeling</h3>
+			<a href="https://ywangattud.github.io/website/">Yanbo Wang</a>,
+			<a href="https://scholar.google.com/citations?user=dboVuDYAAAAJ&amp;hl=en">Justin Dauwels</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2025</a></b> <br>
+			<a href="https://energy-based-model.github.io/compositional-inference/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2505.21780"> <small>[Paper]</small></a>
+			<a href="https://github.com/YWangatTUD/compositional-scene-understanding"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> We explore how generative models can be used not only to synthesize visual content but also to understand the properties of a scene given a natural image. We formulate scene understanding as an inverse generative modeling problem, where we seek to find conditional parameters of a visual generative model to best fit a given natural image. To enable this procedure to infer scene structure from images substantially different than those seen during training, we further propose to build this visual generative model compositionally from smaller models over pieces of a scene. We illustrate how this procedure enables us to infer the set of objects in a scene, enabling robust generalization to new test scenes with an increased number of objects of new shapes. We further illustrate how this enables us to infer global scene factors, likewise enabling robust generalization to new scenes. Finally, we illustrate how this approach can be directly applied to existing pretrained text-to-image generative models for zero-shot multi-object perception. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><img class="img-fluid img-rounded" src="https://yilundu.github.io/data/projects/thumbnail_dissertation.png" style="border:1px solid black" alt="PhD thesis on composable energy landscapes" loading="lazy" decoding="async"></a>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Learning Generalizable Systems by Learning Composable Energy Landscapes</h3>
+			<a href="https://yilundu.github.io/">Yilun Du</a>
+			<br>
+			<b><a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer">MIT PhD Thesis 2024</a></b> <br>
+			<a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"> <small>[Thesis]</small></a>
+			<a href="https://www.youtube.com/watch?v=7jvWDF6ZXPc" target="_blank" rel="noopener noreferrer"> <small>[Defense]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p>This thesis develops energy landscapes as a representation for prediction problems. Test-time search can incorporate new constraints, while compositions of learned landscapes construct models for unseen combinations of factors. It develops methods for probabilistic, deterministic, and annealed energies; an algebra for logical, probabilistic, graphical-model, and hierarchical composition; and applications across vision, robotics, foundation models, and scientific design.</p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/24-ired/ired.gif" style="border:1px solid black" alt="Iterative reasoning through energy diffusion" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Learning Iterative Reasoning through Energy Diffusion</h3>
+            <a href="https://yilundu.github.io/">Yilun Du*</a>,
+			<a href="https://jiayuanm.com/">Jiayuan Mao*</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en">Joshua Tenenbaum</a>
+            <br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2024</a></b> <br>
+			<a href="https://energy-based-model.github.io/ired/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2406.11179"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/ired_code_release"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> We introduce iterative reasoning through energy diffusion (IRED), a novel framework for learning to reason for a variety of tasks by formulating reasoning and decision-making problems with energy-based optimization. IRED learns energy functions to represent the constraints between input conditions and desired outputs. After training, IRED adapts the number of optimization steps during inference based on problem difficulty, enabling it to solve problems outside its training distribution -- such as more complex Sudoku puzzles, matrix completion with large value magnitudes, and pathfinding in larger graphs. Key to our method's success is two novel techniques: learning a sequence of annealed energy landscapes for easier inference and a combination of score function and energy landscape supervision for faster and more stable training. Our experiments show that IRED outperforms existing methods in continuous-space reasoning, discrete-space reasoning, and planning tasks, particularly in more challenging scenarios.  </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/24-decomp-diffusion/decomp_diffusion.png" style="border:1px solid black" alt="Compositional image decomposition with diffusion models" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Compositional Image Decomposition with Diffusion Models</h3>
+            <a href="https://www.semanticscholar.org/author/Jocelin-Su/51149200">Jocelin Su*</a>,
+            <a href="https://nanliu.io/">Nan Liu*</a>,
+            <a href="https://openreview.net/profile?id=~Yanbo_Wang3">Yanbo Wang*</a>,
+            <a href="http://cocosci.mit.edu/josh">Joshua B. Tenenbaum</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2024</a></b> <br>
+			<a href="https://energy-based-model.github.io/decomp-diffusion/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2406.19298"> <small>[Paper]</small></a>
+			<a href="https://github.com/jsu27/decomp_diffusion"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Given an image of a natural scene, we are able to quickly decompose it into a set of components such as objects, lighting, shadows, and foreground. We can then envision a scene where we combine certain components with those from other images, for instance a set of objects from our bedroom and animals from a zoo under the lighting conditions of a forest, even if we have never encountered such a scene before. In this paper, we present a method to decompose an image into such compositional components. Our approach, Decomp Diffusion, is an unsupervised method which, when given a single image, infers a set of different components in the image, each represented by a diffusion model. We demonstrate how components can capture different factors of the scene, ranging from global scene descriptors like shadows or facial expression to local scene descriptors like constituent objects. We further illustrate how inferred factors can be flexibly composed, even with factors inferred from other models, to generate a variety of scenes sharply different than those seen in training time.  </p>
+			</div>
+
+		</div><hr>
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/24-potential/potential.png" style="border:1px solid black" alt="Potential-based diffusion motion planning" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Potential Based Diffusion Motion Planning</h3>
+            <a href="https://devinluo27.github.io/">Yunhao Luo</a>,
+            <a href="https://chensun.me/">Chen Sun</a>,
+            <a href="http://cocosci.mit.edu/josh">Joshua B. Tenenbaum</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2024</a></b> <br>
+			<a href="https://energy-based-model.github.io/potential-motion-plan/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2407.06169"> <small>[Paper]</small></a>
+			<a href="https://github.com/devinluo27/potential-motion-plan-release"> <small>[Code]</small></a>
+			<a href="https://colab.research.google.com/drive/1pARD89PfSzF3Ml6virZjztEJKWhXVkBY?usp=sharing"> <small>[Colab]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Effective motion planning in high-dimensional spaces is a long-standing problem in robotics. Potential-based planners are naturally compositional: different motion constraints can be combined by adding their potentials. However, finding a path requires global optimization over the configuration-space landscape and is often vulnerable to local minima. We learn an easily optimized potential over motion trajectories. The resulting planner outperforms classical and learned alternatives, avoids many local-minimum failures, and composes across a wide range of motion constraints. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/24-compose-model/decentralized.png" style="border:1px solid black" alt="Compositional generative modeling framework" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Compositional Generative Modeling: A Single Model is Not All You Need</h3>
+            <a href="https://yilundu.github.io/">Yilun Du</a>,
+			<a href="https://people.csail.mit.edu/lpk/">Leslie Kaelbling</a>
+            <br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2024</a></b> <br>
+			<a href="https://arxiv.org/abs/2402.01103"> <small>[Paper]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Large monolithic generative models trained on massive amounts of data have become an increasingly dominant approach in AI research. In this paper, we argue that we should instead construct large generative systems by composing smaller generative models together. We show how such a compositional generative approach enables us to learn distributions in a more data-efficient manner, enabling generalization to parts of the data distribution unseen at training time. We further show how this enables us to program and construct new generative models for tasks completely unseen at training. Finally, we show that in many cases, we can discover separate compositional components from data.  </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Unsupervised Compositional Concepts Discovery with Text-to-Image Generative Models" style="border:1px solid black">
+            		<source src="files/paper/23-iccv-concept-discovery-diffusion/teaser.m4v" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Unsupervised Compositional Concepts Discovery with Text-to-Image Generative Models</h3>
+			<a href="https://nanliu.io/" target="_blank" rel="noopener noreferrer">Nan Liu*</a>,
+            <a href="https://yilundu.github.io/">Yilun Du*</a>,
+            <a href="https://shuangli59.github.io/">Shuang Li*</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>,
+			<a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a>
+            <br>
+			<b><a href="https://iccv2023.thecvf.com/" target="_blank" rel="noopener noreferrer">ICCV 2023</a></b> <br>
+			<a href="https://energy-based-model.github.io/unsupervised-concept-discovery/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2306.05357"> <small>[Paper]</small></a>
+			<a href="https://github.com/nanlliu/Unsupervised-Compositional-Concepts-Discovery"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Text-to-image generative models have enabled high-resolution image synthesis across different domains, but require users to specify the content they wish to generate. In this paper, we consider the inverse problem -- given a collection of different images, can we discover the generative concepts that represent each image? We present an unsupervised approach to discover generative concepts from a collection of images, disentangling different art styles in paintings, objects, and lighting from kitchen scenes, and discovering image classes given ImageNet images. We show how such generative concepts can accurately represent the content of images, be recombined and composed to generate new artistic and hybrid images, and be further used as a representation for downstream classification tasks. </p>
+			</div>
+
+		</div><hr>
+		<!-- ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ -->
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Inferring Relational Potentials in Interacting Systems" style="border:1px solid black">
+            		<source src="files/paper/23-icml-niip/teaser_good_trimmed.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Inferring Relational Potentials in Interacting Systems</h3>
+			<a href="https://www.linkedin.com/in/armandcomas/" target="_blank" rel="noopener noreferrer">Armand Comas</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>,
+            <a href="https://www.linkedin.com/in/christian-fernandez-lopez-868b09161/">Christian Fernandez Lopez</a>,
+			<a href="https://sandeshgh.com/" target="_blank" rel="noopener noreferrer">Sandesh Ghimire</a>,
+			<a href="https://scholar.google.com/citations?user=hbNllP0AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Mario Sznaier</a>,
+			<a href="http://cocosci.mit.edu/josh" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>,
+			<a href="https://scholar.google.com/citations?user=htt9T1AAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Octavia Camps</a>
+            <br>
+			<b><a href="https://icml.cc/Conferences/2023" target="_blank" rel="noopener noreferrer">ICML 2023</a>, <span class="award">Oral</span> </b> <br>
+			<a href="https://energy-based-model.github.io/interaction-potentials/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2310.14466"> <small>[Paper]</small></a>
+			<a href="https://github.com/ArmandCom/neural-interaction-inference"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> Systems consisting of interacting agents are prevalent in the world, ranging from dynamical systems in physics to complex biological networks. To build systems which can interact robustly in the real world, it is thus important to be able to infer the precise interactions governing such systems. Existing approaches typically discover such interactions by explicitly modeling the feed-forward dynamics of the trajectories. In this work, we propose Neural Interaction Inference with Potentials (NIIP) as an alternative approach to discover such interactions that enables greater flexibility in trajectory modeling: it discovers a set of relational potentials, represented as energy functions, which when minimized reconstruct the original trajectory. NIIP assigns low energy to the subset of trajectories which respect the relational constraints observed. We illustrate that with these representations NIIP displays unique capabilities in test-time. First, it allows trajectory manipulation, such as interchanging interaction types across separately trained models, as well as trajectory forecasting. Additionally, it allows adding external hand-crafted potentials at test-time. Finally, NIIP enables the detection of out-of-distribution samples and anomalies without explicit training. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models" style="border:1px solid black">
+            		<source src="files/paper/23-recycle-diffusion/teaser.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+            <a href="https://conormdurkan.github.io/">Conor Durkan</a>,
+            <a href="https://rstrudel.github.io/">Robin Strudel</a>,
+            <a href="http://cocosci.mit.edu/josh">Joshua B. Tenenbaum</a>,
+            <a href="https://benanne.github.io/about/">Sander Dieleman</a>,
+            <a href="https://scholar.google.com/citations?user=GgQ9GEkAAAAJ&amp;hl=en">Rob Fergus</a>,
+            <a href="http://www.sohldickstein.com/">Jascha Sohl-Dickstein</a>,
+            <a href="https://www.stats.ox.ac.uk/~doucet/">Arnaud Doucet</a>,
+            <a href="http://www.cs.toronto.edu/~wgrathwohl/">Will Grathwohl</a>
+            <br>
+			<b><a href="https://icml.cc/Conferences/2023/CallForPapers" target="_blank" rel="noopener noreferrer">ICML 2023</a></b> <br>
+			<a href="https://energy-based-model.github.io/reduce-reuse-recycle/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2302.11552"> <small>[Paper]</small></a>
+			<a href="https://colab.research.google.com/drive/1jvlzWMc6oo-TH1fYMl6hsOYfrcQj2rEs?usp=sharing"> <small>[Colab]</small></a>
+			<a href="https://github.com/yilundu/reduce_reuse_recycle"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> Since their introduction, diffusion models have quickly become the prevailing approach to generative modeling in many domains. They can be interpreted as learning the gradients of a time-varying sequence of log-probability density functions. This interpretation has motivated classifier-based and classifier-free guidance as methods for post-hoc control of diffusion models. In this work, we build upon these ideas using the score-based interpretation of diffusion models, and explore alternative ways to condition, modify, and reuse diffusion models for tasks involving compositional generation and guidance. In particular, we investigate why certain types of composition fail using current techniques and present a number of solutions. We conclude that the sampler (not the model) is responsible for this failure and propose new samplers, inspired by MCMC, which enable successful compositional generation. Further, we propose an energy-based parameterization of diffusion models which enables the use of new compositional operators and more sophisticated, Metropolis-corrected samplers. Intriguingly we find these samplers lead to notable improvements in compositional generation across a wide set of problems such as classifier-guided ImageNet modeling and compositional text-to-image generation.  </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Composing Ensembles of Pre-trained Models via Iterative Consensus" style="border:1px solid black">
+            		<source src="files/paper/22-compose-pretrain/teaser-2.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Composing Ensembles of Pre-trained Models via Iterative Consensus</h3>
+			<a href="https://shuangli59.github.io/">Shuang Li*</a>,
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du*</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>,
+			<a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a>,
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			(*equal contribution. Shuang Li did experiments on image generation, video question answering, and mathematical reasoning. Yilun Du did all the experiments on robot manipulation.)
+            <br>
+			<b><a href="https://iclr.cc/Conferences/2023" target="_blank" rel="noopener noreferrer">ICLR 2023</a></b> <br>
+			<a href="https://energy-based-model.github.io/composing-pretrained-models-web/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2210.11522" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> Large pre-trained models exhibit distinct and complementary capabilities dependent on the data they are trained on. Language models such as GPT-3 are capable of textual reasoning but cannot understand visual information, while vision models such as DALL-E can generate photorealistic photos but fail to understand complex language descriptions. In this work, we propose a unified framework for composing ensembles of different pre-trained models -- combining the strengths of each individual model to solve various multimodal problems in a zero-shot manner. We use pre-trained models as "generators" or "scorers" and compose them via closed-loop iterative consensus optimization. The generator constructs proposals and the scorers iteratively provide feedback to refine the generated result. Such closed-loop communication enables models to correct errors caused by other models, significantly boosting performance on downstream tasks, e.g. improving accuracy on grade school math problems by 7.5%, without requiring any model finetuning. We demonstrate that consensus achieved by an ensemble of scorers outperforms the feedback of a single scorer, by leveraging the strengths of each expert model. Results show that the proposed method can be used as a general purpose framework for a wide range of zero-shot multimodal tasks, such as image generation, video question answering, mathematical reasoning, and robotic manipulation.  </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Compositional Visual Generation with Composable Diffusion Models" style="border:1px solid black">
+            		<source src="files/paper/22-compose-diffusion/teaser_glide.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Compositional Visual Generation with Composable Diffusion Models</h3>
+			<a href="https://nanliu.io/" target="_blank" rel="noopener noreferrer">Nan Liu*</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li*</a>,
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du*</a>,
+			<a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a>, and
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>
+			<br>
+			(*equal contribution)
+			<br>
+			<b><a href="https://eccv2022.ecva.net/" target="_blank" rel="noopener noreferrer">ECCV 2022</a></b> <br>
+			<a href="https://energy-based-model.github.io/Compositional-Visual-Generation-with-Composable-Diffusion-Models/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2206.01714" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/energy-based-model/Compositional-Visual-Generation-with-Composable-Diffusion-Models-PyTorch" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			<a href="https://colab.research.google.com/github/energy-based-model/Compositional-Visual-Generation-with-Composable-Diffusion-Models-PyTorch/blob/main/notebooks/demo.ipynb" target="_blank" rel="noopener noreferrer"> <small>[Colab]</small></a>
+			<a href="https://huggingface.co/spaces/Shuang59/Composable-Diffusion" target="_blank" rel="noopener noreferrer"> <small>[HuggingFace Demo]</small></a><br>
+			<span>Press coverage: <a href="https://news.mit.edu/2022/ai-system-makes-models-like-dall-e-2-more-creative-0908" target="_blank" rel="noopener noreferrer">MIT News</a>, <a href="https://www.csail.mit.edu/news/ai-system-makes-models-dall-e-2-more-creative" target="_blank" rel="noopener noreferrer">MIT CSAIL News</a></span>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p>Large text-guided diffusion models, such as DALLE-2, are able to generate stunning photorealistic images given natural language descriptions. While such models are highly flexible, they struggle to understand the composition of certain concepts, such as confusing the attributes of different objects or relations between objects. In this paper, we propose an alternative structured approach for compositional generation using diffusion models. An image is generated by composing a set of diffusion models, with each of them modeling a certain component of the image. To do this, we interpret diffusion models as energy-based models in which the data distributions defined by the energy functions may be explicitly combined. The proposed method can generate scenes at test time that are substantially more complex than those seen in training, composing sentence descriptions, object relations, human facial attributes, and even generalizing to new combinations that are rarely seen in the real world. We further illustrate how our approach may be used to compose pre-trained text-guided diffusion models and generate photorealistic images containing all the details described in the input descriptions, including the binding of certain object attributes that have been shown difficult for DALLE-2. These results point to the effectiveness of the proposed method in promoting structured generalization for visual generation. </p>
+			</div>
+
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/21-iclr-continual-learning/fig2.png" style="border:1px solid black" alt="Energy-based models for continual learning" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Energy-Based Models for Continual Learning</h3>
+			<a href="https://shuangli59.github.io/">Shuang Li</a>,
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://scholar.google.com/citations?user=3k0l15MAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Gido M. van de Ven</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://lifelong-ml.cc/" target="_blank" rel="noopener noreferrer">CoLLAs 2022</a>, <span class="award">Oral</span> </b> <br>
+			<b><a href="https://sites.google.com/view/ebm-workshop-iclr2021" target="_blank" rel="noopener noreferrer">ICLR EBM Workshop 2021</a>, <span class="award">Oral</span> </b> <br>
+			<a href="https://energy-based-model.github.io/Energy-Based-Models-for-Continual-Learning/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2011.12216" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/ShuangLI59/ebm-continual-learning" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p>We motivate energy-based models (EBMs) as a promising model class for continual learning. Instead of relying on external memory, growing models, or regularization, EBMs change the training objective to reduce interference with previously learned information. Our approach is simple, efficient, and outperforms baselines by a large margin on several benchmarks. Its contrastive-divergence objective can also be combined with other continual-learning methods, producing substantial improvements.</p>
+			</div>
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Learning Iterative Reasoning through Energy Minimization" style="border:1px solid black">
+					<source src="files/paper/22-icml-irem/irem.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Learning Iterative Reasoning through Energy Minimization</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://icml.cc/" target="_blank" rel="noopener noreferrer">ICML 2022</a></b> <br>
+			<a href="https://energy-based-model.github.io/iterative-reasoning-as-energy-minimization/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2206.15448" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/irem_code_release" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> Deep learning has excelled on complex pattern recognition tasks such as image classification and object recognition. However, it struggles with tasks requiring nontrivial reasoning, such as algorithmic computation.
+			Humans are able to solve such tasks through iterative reasoning -- spending more time thinking about harder tasks. Most existing neural networks, however, exhibit a fixed computational budget controlled by the neural network architecture, preventing additional computational processing on harder tasks. In this work, we present a new framework for iterative reasoning with neural networks. We train a neural network to parameterize an energy landscape over all outputs, and implement each step of the iterative reasoning as an energy minimization step to find a minimal energy solution. By formulating reasoning as an energy minimization problem, for harder problems that lead to more complex energy landscapes,  we may then adjust our underlying computational budget by running a more complex optimization procedure. We empirically illustrate that our iterative reasoning approach can solve more accurate and generalizable algorithmic reasoning tasks in both graph and continuous domains. Finally, we illustrate that our approach can recursively solve algorithmic problems requiring nested reasoning.</p>
+            </div>
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+			<img class="img-fluid img-rounded" src="files/paper/21-neurips-decompose/teaser.gif" style="border:1px solid black" alt="Unsupervised compositional energy concepts" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Unsupervised Learning of Compositional Energy Concepts</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li</a>,
+			<a href="https://www.yash-sharma.com" target="_blank" rel="noopener noreferrer">Yash Sharma</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://neurips.cc/" target="_blank" rel="noopener noreferrer">NeurIPS 2021</a></b> <br>
+			<a href="https://energy-based-model.github.io/comet/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2111.03042" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/comet" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> We introduce an approach to decompose images, in an unsupervised manner, into separate component energy functions. 
+			These energy functions can represent both global factors of variation, such as facial expression and hair color, and
+			local factors of variation, such as the objects in a scene. Decomposed energy functions generalize well and may be
+			recombined with energy functions discovered by training a separate instance of the approach on another dataset, enabling
+			the recombination of objects and lighting conditions across datasets.</p>
+			</div>
+		</div><hr>
+
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Learning to Compose Visual Relations" style="border:1px solid black">
+            		<source src="files/paper/21-neurips-compose-relation/clevr_teaser.mp4" type="video/mp4">
+        		</video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Learning to Compose Visual Relations</h3>
+			<a href="https://nanliu.io/" target="_blank" rel="noopener noreferrer">Nan Liu*</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li*</a>,
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du*</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>, and
+			<a href="https://groups.csail.mit.edu/vision/torralbalab/" target="_blank" rel="noopener noreferrer">Antonio Torralba</a>
+			<br>
+			(*equal contribution)
+			<br>
+			<b><a href="https://neurips.cc/" target="_blank" rel="noopener noreferrer">NeurIPS 2021</a>, <span class="award">Spotlight</span> </b> <br>
+			<b><a href="https://ctrlgenworkshop.github.io/accepted_papers.html" target="_blank" rel="noopener noreferrer">NeurIPS Workshop on Controllable Generative Modeling 2021</a>, <span class="award">Outstanding Paper Award</span> </b> <br>
+			<span>Press coverage: <a href="https://news.mit.edu/2021/ai-object-relationships-image-generation-1129" target="_blank" rel="noopener noreferrer">MIT News</a>, <a href="https://www.csail.mit.edu/news/artificial-intelligence-understands-object-relationships" target="_blank" rel="noopener noreferrer">MIT CSAIL News</a></span><br>
+			<a href="https://composevisualrelations.github.io/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/nanlliu/compose-visual-relations" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a><br>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p>The visual world around us can be described as a structured set of objects and their associated relations. In this work, we propose to represent each relation as an unnormalized density (an energy-based model), enabling us to compose separate relations in a factorized manner. We show that such a factorized decomposition allows the model to both generate and edit scenes that have multiple sets of relations more faithfully. We further show that decomposition enables our model to effectively understand the underlying relational scene structure.</p>
+			</div>
+
+		</div><hr>
+
+
+<!-- 		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/21-iccv-pvd/spotlight_pvd.gif" style="border:1px solid black" alt="Point-voxel diffusion for 3D shape generation" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">3D Shape Generation and Completion through Point-Voxel Diffusion</h3>
+			<a href="https://yilundu.github.io/">Alex Linqi Zhou</a>,
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>, and
+			<a href="https://jiajunwu.com/">Jiajun Wu</a>
+			<br>
+			<b><a href="https://iccv2021.thecvf.com/home" target="_blank" rel="noopener noreferrer">ICCV 2021</a>, <span class="award">Oral</span> </b> <br>
+			<a href="https://alexzhou907.github.io/pvd" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2104.03670" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/alexzhou907/PVD" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> We present a method to generate 3D shapes through diffusion. Our diffusion objective enables the synthesis of 
+            high fidelity 3D shapes. We further illustrate the ability of our approach to generate multiple different completions of a shape from a single partial observation,
+			and finally illustrate that it may generalize to real depth images.</p>
+			</div>
+		</div><hr>
+ -->
+		
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/21-iclr-ebm-improve/fig1.png" style="border:1px solid black" alt="Improved contrastive divergence training for energy-based models" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Improved Contrastive Divergence Training of Energy Based Models</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li</a>,
+			<a href="https://scholar.google.com/citations?user=rRJ9wTJMUB8C&amp;hl=en" target="_blank" rel="noopener noreferrer">Joshua B. Tenenbaum</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://icml.cc/Conferences/2021" target="_blank" rel="noopener noreferrer">ICML 2021</a> </b> <br>
+			<b><a href="https://sites.google.com/view/ebm-workshop-iclr2021" target="_blank" rel="noopener noreferrer">ICLR EBM Workshop 2021</a>, <span class="award">Oral</span> </b> <br>
+			<a href="https://energy-based-model.github.io/improved-contrastive-divergence/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2012.01316" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/improved_contrastive_divergence" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> We present tools to improve the underlying contrastive divergence objective for training EBMs. First we illustrate a neglected term in contrastive divergence
+            training of EBMs, and present a loss function to mitigate this term. We further propose to utilize data augmentation to aid the mixing of MCMC chains when training EBMs 
+            and propose to use a multiscale architecture to further improve the underlying generative performance. We illustrate how our tricks improve the underlying generative 
+			performance of EBMs, and further show improved out-of-distribution detection.</p>
+			</div>
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/20-neurips-ebm-compositional/comp-face.gif" style="border:1px solid black" alt="Compositional visual generation with energy-based models" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Compositional Visual Generation and Inference with Energy Based Models</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://shuangli59.github.io/">Shuang Li</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://neurips.cc/" target="_blank" rel="noopener noreferrer">NeurIPS 2020</a>, <span class="award">Spotlight</span> </b> <br>
+			<a href="https://energy-based-model.github.io/compositional-generation-inference/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2004.06030" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/ebm_compositionality" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> A vital aspect of human intelligence is the ability to compose increasingly complex concepts out of simpler ideas, enabling both rapid learning and adaptation of knowledge. In this paper we show that energy-based models can exhibit this ability by directly combining probability distributions. Samples from the combined distribution correspond to compositions of concepts. For example, given one distribution for smiling face images, and another for male faces, we can combine them to generate smiling male faces. This allows us to generate natural images that simultaneously satisfy conjunctions, disjunctions, and negations of concepts. We evaluate compositional generation abilities of our model on the CelebA dataset of natural faces and synthetic 3D scene images. We showcase the breadth of unique capabilities of our model, such as the ability to continually learn and incorporate new concepts, or infer compositions of concept properties underlying an image.</p>
+			</div>
+		</div><hr>
+
+
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/20-iclr-protein/protein.png" style="border:1px solid black" alt="Atomic-level protein conformation energy model" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Energy-Based Models for Atomic-Resolution Protein Conformations</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+            <a href="https://scholar.google.com/citations?user=2M0OltAAAAAJ&amp;hl=en&amp;oi=ao">Joshua Meier</a>,
+            <a href="https://scholar.google.com/citations?user=qukcWBAAAAAJ&amp;hl=en&amp;oi=ao">Jerry Ma</a>,
+            <a href="https://cs.nyu.edu/~fergus/pmwiki/pmwiki.php">Rob Fergus</a>, and
+            <a href="https://scholar.google.com/citations?user=vqb78-gAAAAJ&amp;hl=en&amp;oi=ao">Alexander Rives</a>
+			<br>
+			<b><a href="https://iclr.cc/Conferences/2020" target="_blank" rel="noopener noreferrer">ICLR 2020</a>, <span class="award">Spotlight</span> </b> <br>
+			<a href="https://arxiv.org/abs/2004.13167" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/facebookresearch/protein-ebm" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> We propose an energy-based model (EBM) of protein conformations that operates at atomic scale. The model is trained solely on crystallized protein data. By contrast, existing approaches for scoring conformations use energy functions that incorporate knowledge of physical principles and features that are the complex product of several decades of research and tuning. To evaluate the model, we benchmark on the rotamer recovery task, the problem of predicting the conformation of a side chain from its context within a protein structure, which has been used to evaluate energy functions for protein design. The model achieves performance close to that of the Rosetta energy function, a state-of-the-art method widely used in protein structure prediction and design. An investigation of the model’s outputs and hidden representations finds that it captures physicochemical properties relevant to protein energy.</p>
+			</div>
+		</div><hr>
+
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="files/paper/corl-2019-planning/ebm_plan.png" style="border:1px solid black" alt="Model-based planning with energy-based models" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Model Based Planning with Energy Based Models</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a>,
+			<a href="https://toruowo.github.io/">Toru Lin</a>, and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://sites.google.com/robot-learning.org/corl2019" target="_blank" rel="noopener noreferrer">CORL 2019</a></b> <br>
+			<b><a href="https://sites.google.com/view/mbrl-icml2019/home" target="_blank" rel="noopener noreferrer">ICML MBRL Workshop 2019</a>, <span class="award">Oral</span> </b> <br>
+			<a href="https://arxiv.org/abs/1909.06878" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/yilundu/model_based_planning_ebm" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> Model-based planning holds great promise for improving both sample efficiency and generalization in reinforcement learning (RL). We show that energy-based models (EBMs) are a promising class of models to use for model-based planning. EBMs naturally support inference of intermediate states given start and goal state distributions. We provide an online algorithm to train EBMs while interacting with the environment, and show that EBMs allow for significantly better online learning than corresponding feed-forward networks. We further show that EBMs support maximum entropy state inference and are able to generate diverse state space plans. We show that inference purely in state space - without planning actions - allows for better generalization to previously unseen obstacles in the environment and prevents the planner from exploiting the dynamics model by applying uncharacteristic action sequences.</p>			</div>
+		</div><hr>
+
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<video width="100%" playsinline muted loop controls preload="metadata" aria-label="Video preview for Implicit Generation and Generalization in Energy-Based Models">
+                    <source src="files/paper/nips-2019-ebm/half.mp4" type="video/mp4">
+                </video>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Implicit Generation and Generalization in Energy-Based Models</h3>
+			<a href="https://yilundu.github.io/" target="_blank" rel="noopener noreferrer">Yilun Du</a> and
+			<a href="https://scholar.google.com/citations?user=Vzr1RukAAAAJ&amp;hl=en" target="_blank" rel="noopener noreferrer">Igor Mordatch</a>
+			<br>
+			<b><a href="https://neurips.cc/" target="_blank" rel="noopener noreferrer">NeurIPS 2019</a>, <span class="award">Spotlight</span> </b> <br>
+			<a href="https://openai.com/index/energy-based-models/" target="_blank" rel="noopener noreferrer"> <small>[OpenAI Blog]</small></a>
+			<a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener noreferrer"> <small>[Paper]</small></a>
+			<a href="https://github.com/openai/ebm_code_release" target="_blank" rel="noopener noreferrer"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+			<p> Energy-based models (EBMs) are an appealing class of models due to their generality and simplicity in likelihood modeling. However, EBMs have traditionally been difficult to train. We present techniques to scale MCMC-based EBM training on continuous neural networks in high-dimensional domains such as ImageNet and robotic hand trajectories. We highlight unique capabilities of implicit generation. Finally, we illustrate how EBMs are useful across a wide variety of tasks, including out-of-distribution classification, adversarially robust classification, online continual learning, and compositionality.</p>
+			</div>
+		</div><hr>
+
+
+
+				</div>
+				<p class="empty-state" id="publication-empty">No publications match this search. Try a broader term or select another topic.</p>
+			</div>
+		</section>
+
+	</main>
+
+	<footer class="site-footer">
+		<div class="container"><p>Energy-Based Models · A research collection by <a href="https://yilundu.github.io/" rel="author">Yilun Du</a>.</p></div>
+	</footer>
+
+	<script>
+	(function () {
+		const list = document.getElementById('publication-list');
+		const search = document.getElementById('publication-search');
+		const count = document.getElementById('publication-count');
+		const empty = document.getElementById('publication-empty');
+		const filterButtons = Array.from(document.querySelectorAll('[data-filter]'));
+		const cards = Array.from(list.children).filter((element) => element.classList.contains('row'));
+		let activeFilter = 'all';
+
+		const topicAssignments = {
+			'Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models': ['generation', 'learning'],
+			'Generalizable Reasoning through Compositional Energy Minimization': ['composition', 'reasoning'],
+			'Energy-Based Transformers are Scalable Learners and Thinkers': ['reasoning', 'learning'],
+			'Compositional Scene Understanding through Inverse Generative Modeling': ['composition', 'generation'],
+			'Learning Generalizable Systems by Learning Composable Energy Landscapes': ['composition', 'reasoning', 'generation'],
+			'Learning Iterative Reasoning through Energy Diffusion': ['reasoning', 'learning'],
+			'Compositional Image Decomposition with Diffusion Models': ['composition', 'generation'],
+			'Potential Based Diffusion Motion Planning': ['composition', 'reasoning'],
+			'Compositional Generative Modeling: A Single Model is Not All You Need': ['composition', 'generation'],
+			'Unsupervised Compositional Concepts Discovery with Text-to-Image Generative Models': ['composition', 'generation'],
+			'Inferring Relational Potentials in Interacting Systems': ['reasoning', 'learning'],
+			'Reduce, Reuse, Recycle: Compositional Generation with Energy-Based Diffusion Models': ['composition', 'generation'],
+			'Composing Ensembles of Pre-trained Models via Iterative Consensus': ['composition', 'reasoning'],
+			'Compositional Visual Generation with Composable Diffusion Models': ['composition', 'generation'],
+			'Learning Iterative Reasoning through Energy Minimization': ['reasoning'],
+			'Unsupervised Learning of Compositional Energy Concepts': ['composition', 'generation'],
+			'Learning to Compose Visual Relations': ['composition', 'generation'],
+			'Improved Contrastive Divergence Training of Energy Based Models': ['learning', 'generation'],
+			'Energy-Based Models for Continual Learning': ['learning'],
+			'Compositional Visual Generation and Inference with Energy Based Models': ['composition', 'generation'],
+			'Energy-Based Models for Atomic-Resolution Protein Conformations': ['generation'],
+			'Model Based Planning with Energy Based Models': ['reasoning'],
+			'Implicit Generation and Generalization in Energy-Based Models': ['generation', 'learning']
+		};
+		const topicLabels = {
+			generation: 'Generative modeling',
+			composition: 'Composition',
+			reasoning: 'Reasoning & planning',
+			learning: 'Learning & adaptation'
+		};
+
+		cards.forEach((card, index) => {
+			const title = card.querySelector('.paper-title');
+			const topics = title ? (topicAssignments[title.textContent.trim()] || []) : [];
+			const topicText = topics.map((topic) => topicLabels[topic]).join(' ');
+			card.dataset.search = `${card.textContent} ${topicText}`.toLowerCase().replace(/\s+/g, ' ').trim();
+			card.dataset.topics = topics.join(' ');
+
+			const details = card.querySelector('.col-md-9');
+			if (details && topics.length) {
+				const chips = document.createElement('div');
+				chips.className = 'paper-topics';
+				topics.forEach((topic) => {
+					const chip = document.createElement('span');
+					chip.className = 'topic-chip';
+					chip.textContent = topicLabels[topic];
+					chips.appendChild(chip);
+				});
+				details.appendChild(chips);
+			}
+
+			const abstract = card.querySelector('.col-md-12');
+			const abstractText = abstract ? abstract.querySelector('p') : null;
+			if (abstract && abstractText) {
+				abstract.classList.add('paper-abstract');
+				abstractText.id = `abstract-${index + 1}`;
+				abstractText.classList.add('summary-full');
+				abstractText.hidden = true;
+				const preview = abstractText.cloneNode(true);
+				preview.removeAttribute('id');
+				preview.className = 'summary-preview';
+				preview.hidden = false;
+				preview.setAttribute('aria-hidden', 'true');
+				abstract.insertBefore(preview, abstractText);
+				const toggle = document.createElement('button');
+				toggle.className = 'abstract-toggle';
+				toggle.type = 'button';
+				toggle.textContent = 'Read summary';
+				toggle.setAttribute('aria-expanded', 'false');
+				toggle.setAttribute('aria-controls', abstractText.id);
+				toggle.addEventListener('click', () => {
+					const expanded = toggle.getAttribute('aria-expanded') !== 'true';
+					card.classList.toggle('expanded', expanded);
+					abstractText.hidden = !expanded;
+					preview.hidden = expanded;
+					toggle.textContent = expanded ? 'Hide summary' : 'Read summary';
+					toggle.setAttribute('aria-expanded', String(expanded));
+				});
+				abstract.appendChild(toggle);
+			}
+
+			const image = card.querySelector('img');
+			if (image) {
+				image.loading = 'lazy';
+				image.decoding = 'async';
+				if (!image.alt && title) image.alt = `Preview for ${title.textContent.trim()}`;
+			}
+			const video = card.querySelector('video');
+			if (video) {
+				video.controls = true;
+				video.preload = 'metadata';
+				video.removeAttribute('autoplay');
+				if (title) video.setAttribute('aria-label', `Video preview for ${title.textContent.trim()}`);
+			}
+
+			if (title) {
+				card.querySelectorAll('.col-md-9 a small').forEach((small) => {
+					const link = small.closest('a');
+					const label = small.textContent.replace(/[\[\]]/g, '').trim();
+					if (link && label) link.setAttribute('aria-label', `${label} for ${title.textContent.trim()}`);
+				});
+			}
+		});
+
+		function applyFilters() {
+			const query = search.value.toLowerCase().trim();
+			let visible = 0;
+			cards.forEach((card) => {
+				const matchesTopic = activeFilter === 'all' || card.dataset.topics.split(' ').includes(activeFilter);
+				const matchesSearch = !query || card.dataset.search.includes(query);
+				const show = matchesTopic && matchesSearch;
+				card.classList.toggle('is-hidden', !show);
+				if (show) visible += 1;
+			});
+			count.textContent = `Showing ${visible} of ${cards.length} publications`;
+			empty.classList.toggle('visible', visible === 0);
+		}
+
+		function setFilter(filter) {
+			activeFilter = filter;
+			filterButtons.forEach((button) => {
+				const isActive = button.dataset.filter === filter;
+				button.classList.toggle('active', isActive);
+				button.setAttribute('aria-pressed', String(isActive));
+			});
+			applyFilters();
+		}
+
+		filterButtons.forEach((button) => button.addEventListener('click', () => setFilter(button.dataset.filter)));
+		search.addEventListener('input', applyFilters);
+
+		document.querySelectorAll('a[target="_blank"]').forEach((link) => link.setAttribute('rel', 'noopener noreferrer'));
+
+		applyFilters();
+	})();
+	</script>
+</body>
+
+</html>
