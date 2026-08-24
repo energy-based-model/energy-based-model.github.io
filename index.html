@@ -150,15 +150,15 @@
 		.formula-intro h2 { margin-bottom: 8px; }
 		.formula-intro p { margin: 0; }
 		.formula-pair { min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; border-radius: 0; }
-		.representation-row { display: grid; grid-template-columns: 10rem minmax(0, 1fr); column-gap: 2rem; padding-top: 18px; border-top: 1px solid var(--line); }
-		.representation-row .formula-label { grid-column: 1; grid-row: 1 / span 3; margin: 0; padding-top: 1px; }
-		.representation-row .formula, .representation-row .formula-caption, .representation-notes { grid-column: 2; }
+		.representation-row { display: block; padding-top: 18px; border-top: 1px solid var(--line); }
+		.representation-row .formula-label { margin: 0 0 7px; padding: 0; }
 		.representation-notes { margin-top: 14px; }
 		.representation-notes p { margin: 0 0 10px; color: var(--ink); font-size: 1rem; font-weight: 400; line-height: 1.6; }
 		.representation-notes p:last-child { margin-bottom: 0; }
 		.representation-notes strong { font-weight: 650; }
-		.inference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
-		.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); padding-left: 2.5rem; }
+		.inference-grid { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 24px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+		.inference-grid .formula-pair { display: grid; grid-template-rows: auto auto 1fr; align-content: start; }
+		.inference-grid .formula-pair + .formula-pair { border-left: 0; padding-left: 0; }
 		.formula-label { margin: 0 0 7px; color: var(--ink); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
 		.formula { margin: 0; overflow: visible; color: var(--accent-dark); font-size: 1.05rem; font-weight: 500; white-space: normal; }
 		.formula-caption { margin: 8px 0 0; color: var(--muted); font-size: 0.95rem; font-weight: 400; }
@@ -301,12 +301,9 @@
 			h2 { font-size: 1.4rem; }
 			.section { padding: 44px 0; }
 			.direction-grid, .faq-grid { grid-template-columns: 1fr; gap: 24px; }
-			.representation-row { grid-template-columns: 1fr; column-gap: 0; }
-			.representation-row .formula-label { grid-column: 1; grid-row: auto; margin-bottom: 7px; }
-			.representation-row .formula, .representation-row .formula-caption, .representation-notes { grid-column: 1; }
-			.inference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-			.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); border-top: 0; padding-top: 0; padding-left: 16px; }
-			.formula { white-space: normal; overflow-wrap: anywhere; }
+			.inference-grid { grid-template-columns: 1fr; gap: 0; }
+			.inference-grid .formula-pair + .formula-pair { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+			.formula { white-space: normal; overflow-wrap: normal; word-break: normal; }
 			.publication-list > .row { grid-template-columns: 1fr; gap: 14px; padding: 24px 0; }
 			.publication-list .col-md-3, .publication-list .col-md-9, .publication-list .col-md-12 { grid-column: 1; grid-row: auto; }
 			.publication-list .col-md-3 { max-width: 280px; }
@@ -359,12 +356,12 @@
 					</div>
 					<div class="inference-grid">
 						<div class="formula-pair">
-							<p class="formula-label">One solution: MAP</p>
+							<p class="formula-label">One solution (MAP)</p>
 							<p class="formula">ŷ = arg min<sub>y</sub> E<sub>θ</sub>(x, y)</p>
 							<p class="formula-caption">Search for the lowest-energy output. In probabilistic terms, this is the maximum a posteriori (MAP) solution.</p>
 						</div>
 						<div class="formula-pair">
-							<p class="formula-label">Multiple solutions: Langevin dynamics</p>
+							<p class="formula-label">Multiple solutions (Langevin)</p>
 							<p class="formula">y<sub>t+1</sub> = y<sub>t</sub> − η∇<sub>y</sub>E<sub>θ</sub>(x, y<sub>t</sub>) + √(2η) ε<sub>t</sub></p>
 							<p class="formula-caption">Langevin dynamics is a gradient-based Markov chain Monte Carlo (MCMC) procedure: it repeatedly moves a candidate toward lower energy while adding noise. Different initializations and noise can produce different plausible outputs.</p>
 						</div>
