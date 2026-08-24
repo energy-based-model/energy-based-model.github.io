@@ -293,7 +293,8 @@
 			.reading-list li { padding: 1px 0 4px; font-size: 0.9rem; line-height: 1.45; }
 		}
 		@media (max-width: 640px) {
-			html { scroll-padding-top: 110px; }
+			/* On phones, return to the full base size for readability. */
+			html { font-size: 100%; scroll-padding-top: 110px; }
 			.container { width: calc(100% - 32px); }
 			.nav-inner { align-items: flex-start; flex-direction: column; gap: 4px; padding: 10px 0; }
 			.hero { padding: 48px 0 44px; }
