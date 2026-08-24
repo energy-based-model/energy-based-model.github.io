@@ -151,8 +151,12 @@
 		.formula-intro p { margin: 0; }
 		.formula-pair { min-width: 0; margin: 0; padding: 0; border: 0; background: transparent; border-radius: 0; }
 		.representation-row { display: grid; grid-template-columns: 10rem minmax(0, 1fr); column-gap: 2rem; padding-top: 18px; border-top: 1px solid var(--line); }
-		.representation-row .formula-label { grid-column: 1; grid-row: 1 / span 2; margin: 0; padding-top: 1px; }
-		.representation-row .formula, .representation-row .formula-caption { grid-column: 2; }
+		.representation-row .formula-label { grid-column: 1; grid-row: 1 / span 3; margin: 0; padding-top: 1px; }
+		.representation-row .formula, .representation-row .formula-caption, .representation-notes { grid-column: 2; }
+		.representation-notes { margin-top: 14px; }
+		.representation-notes p { margin: 0 0 10px; color: var(--ink); font-size: 1rem; font-weight: 400; line-height: 1.6; }
+		.representation-notes p:last-child { margin-bottom: 0; }
+		.representation-notes strong { font-weight: 650; }
 		.inference-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
 		.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); padding-left: 2.5rem; }
 		.formula-label { margin: 0 0 7px; color: var(--ink); font-size: 0.95rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
@@ -297,7 +301,9 @@
 			h2 { font-size: 1.4rem; }
 			.section { padding: 44px 0; }
 			.direction-grid, .faq-grid { grid-template-columns: 1fr; gap: 24px; }
-			.representation-row { grid-template-columns: 7.5rem minmax(0, 1fr); column-gap: 1rem; }
+			.representation-row { grid-template-columns: 1fr; column-gap: 0; }
+			.representation-row .formula-label { grid-column: 1; grid-row: auto; margin-bottom: 7px; }
+			.representation-row .formula, .representation-row .formula-caption, .representation-notes { grid-column: 1; }
 			.inference-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 			.inference-grid .formula-pair + .formula-pair { border-left: 1px solid var(--line); border-top: 0; padding-top: 0; padding-left: 16px; }
 			.formula { white-space: normal; overflow-wrap: anywhere; }
@@ -331,8 +337,8 @@
 		<header class="hero">
 			<div class="container hero-grid">
 				<h1>Energy-Based Models</h1>
-				<p class="hero-lead">Energy-Based Models assign a numerical score, called energy, to each candidate solution. Lower energy means that a candidate better fits the input or constraints. Rather than producing an answer in one fixed way, an EBM learns a landscape that can be optimized for one solution or sampled for several plausible solutions. We can also compose models by adding their energies, then search for a solution that satisfies them together.</p>
-				<p class="hero-note">Our research studies how to learn reusable energy landscapes, then adapt, compose, and search them at inference time for structured generalization in generation, reasoning, and planning.</p>
+				<p class="hero-lead">Energy-Based Models assign a numerical score, called energy, to each candidate output. A candidate output might be an image, a scene interpretation, a reasoning solution, or a robot trajectory. Lower energy means that a candidate better fits the input or constraints. Rather than producing an answer in one fixed way, an EBM learns a landscape. Once learned, we can search this landscape for one low-energy solution or sample from it to obtain several plausible solutions. We can also compose models by adding their energies, then search for outputs that score well under their combination.</p>
+				<p class="hero-note">Our research uses learned energy landscapes both to model which outcomes are plausible and as reusable problem representations that can be combined and searched after training to solve new generation, reasoning, and planning problems.</p>
 				<p class="hero-actions">
 					<a href="#Publications">Browse publications ↓</a>
 					<a href="https://arxiv.org/abs/1903.08689">Implicit generation with EBMs (2019) ↗</a>
@@ -340,12 +346,16 @@
 				<div class="formula-card" aria-label="Energy-based representation, MAP optimization, and Langevin sampling">
 					<div class="formula-intro">
 						<h2>Representation and inference</h2>
-						<p>An EBM learns a landscape over possible outputs. The landscape tells us which outputs fit the input, but it does not prescribe how an output must be produced. Below, x is the input and y is a candidate output. We can optimize the landscape for one low-energy solution or approximately sample multiple plausible solutions. Because the representation remains available at inference time, we can also condition it on observed variables or add new energy terms.</p>
+						<p>An EBM learns a landscape over possible outputs. The landscape tells us which outputs fit the input, but it does not specify how outputs should be generated. Below, x is the input, y is a candidate output, and θ denotes the learned model parameters. During training, we learn θ; during inference, θ remains fixed while we search over y for one low-energy output or sample several plausible outputs. Because the energy function remains available during inference, we can add new energy terms representing additional goals or constraints. If the EBM is trained as a joint energy over several variables, we can also fix any observed variables and infer the others.</p>
 					</div>
 					<div class="formula-pair representation-row">
 						<p class="formula-label">Representation</p>
 						<p class="formula">p<sub>θ</sub>(y | x) = exp(−E<sub>θ</sub>(x, y)) / Z<sub>θ</sub>(x)</p>
-						<p class="formula-caption">The energy induces a probability distribution: lower-energy outputs receive higher probability, while Z<sub>θ</sub>(x) normalizes the distribution.</p>
+						<p class="formula-caption">The energy induces a probability distribution in which lower-energy outputs receive higher probability.</p>
+						<div class="representation-notes">
+							<p><strong>How the energy is learned.</strong> One common approach is maximum-likelihood training. It lowers the energy of observed input-output pairs and raises the energy of alternatives sampled from the current model. Repeating this process shapes the model distribution toward the training data.</p>
+							<p><strong>What Z does.</strong> Z<sub>θ</sub>(x) is the partition function: the sum or integral of exp(−E<sub>θ</sub>(x, y)) over every possible output y. Dividing by Z makes the probabilities add up to one. For large or continuous output spaces, this calculation is usually too expensive to perform exactly, so training uses samples or objectives that avoid evaluating Z directly.</p>
+						</div>
 					</div>
 					<div class="inference-grid">
 						<div class="formula-pair">
@@ -356,10 +366,10 @@
 						<div class="formula-pair">
 							<p class="formula-label">Multiple solutions: Langevin dynamics</p>
 							<p class="formula">y<sub>t+1</sub> = y<sub>t</sub> − η∇<sub>y</sub>E<sub>θ</sub>(x, y<sub>t</sub>) + √(2η) ε<sub>t</sub></p>
-							<p class="formula-caption">Repeatedly move a candidate toward lower energy while adding noise. Different runs can produce different plausible outputs.</p>
+							<p class="formula-caption">Langevin dynamics is a gradient-based Markov chain Monte Carlo (MCMC) procedure: it repeatedly moves a candidate toward lower energy while adding noise. Different initializations and noise can produce different plausible outputs.</p>
 						</div>
 					</div>
-					<p class="formula-explainer">Both procedures use the same learned energy function. MAP is useful when one best solution is needed; Langevin dynamics approximately explores the distribution and can produce diverse samples.</p>
+					<p class="formula-explainer">Both procedures use the same learned energy function. MAP is useful when one best solution is needed; Langevin dynamics approximately explores the distribution and can produce diverse samples. In the Langevin equation, η is the step size and ε<sub>t</sub> is Gaussian noise. This form assumes that y is continuous and differentiable; discrete outputs require a different search or relaxation procedure.</p>
 				</div>
 			</div>
 		</header>
@@ -371,16 +381,16 @@
 				</div>
 				<div class="overview-grid">
 					<div class="overview-copy">
-						<p>An EBM assigns an energy E<sub>θ</sub>(x, y) to every candidate output y given an input x. This energy induces a conditional Boltzmann distribution p<sub>θ</sub>(y | x), where the partition function Z<sub>θ</sub>(x) normalizes the probability over all possible outputs.</p>
-						<p>Representing a distribution with an EBM is simple: a scalar energy function defines an unnormalized density. This does not require choosing an ordering of the variables or an autoregressive factorization. Diffusion models instead introduce a prescribed noising process and learn noise-conditioned denoising functions or score fields. The representation is simple and flexible, but the partition function is generally intractable and both training and inference can be difficult.</p>
-						<p>A conventional predictor learns a direct map from x to one output. An EBM instead keeps the landscape over possible outputs available at inference time. We can minimize it for one answer, sample several answers, evaluate candidates, or add another energy that expresses a new requirement.</p>
-						<p>Composition has a concrete meaning for Energy-Based Models: different energy functions represent different pieces of knowledge—such as dynamics, goals, or constraints—and we add them before running inference. The combined landscape favors solutions that have low energy under every component. A <a href="https://arxiv.org/abs/1909.06878" target="_blank" rel="noopener noreferrer">robot planner</a>, for example, can combine a learned dynamics energy with an energy for a new goal, then optimize a trajectory that both follows the dynamics and reaches the goal. Because the component models remain separate, we can change the goal or add another constraint without retraining the full system.</p>
+						<p>An EBM assigns an energy E<sub>θ</sub>(x, y) to every candidate output y given an input x. This energy defines the conditional probability distribution p<sub>θ</sub>(y | x), where the partition function Z<sub>θ</sub>(x) normalizes the probabilities over all possible outputs.</p>
+						<p>Representing a distribution with an EBM is simple: a scalar energy function defines an unnormalized density—relative likelihoods before they are normalized into a probability distribution. Autoregressive models represent an output as a fixed sequence of predictions, while diffusion models learn a multi-step denoising process. An EBM does not require either structure. These categories can overlap: a diffusion model can be parameterized so that its denoising direction is derived from an energy at each noise level. The EBM representation is simple and flexible, but the partition function is generally intractable and both training and inference can be difficult.</p>
+						<p>Many conventional predictors produce an answer through one fixed forward computation. An EBM instead retains a landscape that an inference procedure can search, sample, evaluate, or combine with new requirements.</p>
+						<p>Composition has a concrete meaning for Energy-Based Models: each energy function can represent one piece of knowledge, such as dynamics, a goal, or a constraint. We add the energies and then search for an output with low total energy. Intuitively, low total energy corresponds to satisfying the represented goals and constraints together. A <a href="https://arxiv.org/abs/1909.06878" target="_blank" rel="noopener noreferrer">robot planner</a>, for example, can combine a learned dynamics energy with an energy for a new goal, then find a trajectory that follows the dynamics and reaches the goal. Because the component models remain separate, we can change the goal or add another constraint without retraining the full system.</p>
 						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, discusses some of the advantages of EBMs: we can learn reusable energy landscapes from data, then compose and optimize them at inference time to solve tasks not represented directly in the training set.</p>
 					</div>
 					<div class="key-points" aria-label="Key properties of Energy-Based Models">
 						<div class="key-point"><strong>Flexible representation</strong><span>A single energy can represent a distribution without a prescribed variable ordering, factorization, or noising process.</span></div>
 						<div class="key-point"><strong>Multiple inference procedures</strong><span>The same landscape supports optimization, sampling, and decision-making under a utility or constraint.</span></div>
-						<div class="key-point"><strong>Composition</strong><span>Add energy functions and search for a solution that satisfies them together—for example, a trajectory that follows learned dynamics and reaches a new goal.</span></div>
+						<div class="key-point"><strong>Composition</strong><span>Add compatible, appropriately weighted energy functions and search for an output that scores well across their combination—for example, a trajectory that follows learned dynamics and reaches a new goal.</span></div>
 					</div>
 				</div>
 			</div>
@@ -399,7 +409,7 @@
 					</article>
 					<article class="direction-card">
 						<h3>Compose different kinds of knowledge</h3>
-						<p>Concepts, relations, dynamics, goals, and constraints can all be expressed as energies over the same variables. Adding these energies creates a new landscape whose low-energy solutions must satisfy the components together. We can therefore form a new inference problem without retraining the models jointly.</p>
+						<p>When concepts, relations, dynamics, goals, and constraints are encoded as compatible energies over shared variables, their weighted sum creates a new landscape that balances these components. We can therefore form a new inference problem without retraining the models jointly.</p>
 					</article>
 					<article class="direction-card">
 						<h3>Reuse structure across scale</h3>
@@ -411,11 +421,11 @@
 					</article>
 					<article class="direction-card">
 						<h3>Co-design the landscape and the solver</h3>
-						<p>A model is useful only if inference can reach its low-energy regions. We can therefore shape the learned landscape together with the solver, so that optimization or sampling can find good solutions rather than merely assign them low energy. Examples include annealed or corrected sampling, parallel minimization, and equilibrium objectives.</p>
+						<p>A model is useful only if inference can reach its low-energy regions. We can therefore shape the learned landscape together with the solver, so that optimization or sampling can find good solutions rather than merely assign them low energy. For example, inference can begin on a smoother landscape and gradually sharpen it, optimize several candidates in parallel, or train the landscape specifically so that the chosen solver can reach good solutions.</p>
 					</article>
 					<article class="direction-card">
-						<h3>Condition in either direction</h3>
-						<p>If a joint energy scores a pair x and y, we can hold either variable fixed and infer the other: p(x | y) or p(y | x). For example, the same relational model can generate a scene that satisfies several relations or infer the relations present in an observed scene, as in <a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"><em>Learning to Compose Visual Relations</em></a>.</p>
+						<h3>A joint energy can condition in either direction</h3>
+						<p>If one energy function scores x and y together, we can hold x fixed and infer y, or hold y fixed and infer x. This requires a joint model; the conditional formula above only models y given x. For example, the same relational model can generate a scene that satisfies several relations or infer the relations present in an observed scene, as in <a href="https://arxiv.org/abs/2111.09297" target="_blank" rel="noopener noreferrer"><em>Learning to Compose Visual Relations</em></a>.</p>
 					</article>
 				</div>
 			</div>
@@ -430,15 +440,15 @@
 				<div class="faq-grid">
 					<article class="faq-item">
 						<h3>EBMs as generative models</h3>
-						<p>When used as a generative model, an EBM assigns greater relative probability to lower-energy data. This defines an unnormalized density: the model specifies relative likelihoods without computing the constant needed to turn them into a probability distribution. MCMC methods such as Langevin dynamics generate samples by repeatedly moving a candidate toward lower energy while adding noise. Conditioning the energy on an input extends the same formulation to conditional generation and structured prediction.</p>
+						<p>When used as a generative model, an EBM assigns greater relative probability to lower-energy data. This defines an unnormalized density: the model specifies relative likelihoods without computing the constant needed to turn them into a probability distribution. These relative likelihoods let us rank candidates directly and identify the most likely one. MCMC methods such as Langevin dynamics generate samples by repeatedly moving a candidate toward lower energy while adding noise.</p>
 					</article>
 					<article class="faq-item">
 						<h3>Relationship to diffusion models</h3>
-						<p>Diffusion models learn how to move a noisy sample toward more likely data at many noise levels. In an energy-based parameterization, each such direction is given by the negative gradient of a scalar energy function. This connection lets us use energy-based sampling and composition within diffusion models. In our work, we study both <a href="https://energy-based-model.github.io/reduce-reuse-recycle/">energy-based diffusion samplers</a> and <a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">equilibrium energy landscapes</a>.</p>
+						<p>Diffusion models learn how to move a noisy sample toward more likely data at many noise levels. In an energy-based parameterization, each such direction is given by the negative gradient of a scalar energy function. This connection lets us use energy-based sampling and composition within diffusion models. In our work, we study <a href="https://energy-based-model.github.io/reduce-reuse-recycle/">energy-based diffusion samplers</a>, as well as how to blend diffusion objectives to build <a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">equilibrium energy landscapes</a>.</p>
 					</article>
 					<article class="faq-item">
 						<h3>Composition by adding energies</h3>
-						<p>To compose EBMs, we add their energies and run inference in the resulting landscape. Low energy under the sum favors solutions that are compatible with every component. Probabilistically, adding energies multiplies the models’ relative likelihoods. The result can nevertheless fail if one model’s scores dominate or the sampler cannot reach a region that satisfies the components together.</p>
+						<p>To compose EBMs, we add their energies and run inference in the resulting landscape. When component scales are compatible or explicitly weighted, low-total-energy candidates tend to score well across them. Probabilistically, adding energies multiplies the models’ relative likelihoods. The result can nevertheless fail if one model’s scores dominate or the sampler cannot reach a region that scores well across the components.</p>
 					</article>
 					<article class="faq-item">
 						<h3>Inference for reasoning and planning</h3>
@@ -464,7 +474,7 @@
 				<div class="history-grid">
 					<div class="history-copy">
 						<p>Energy-Based Models borrow a simple idea from statistical physics: represent each configuration with a scalar energy, so that lower-energy configurations are more probable or more compatible. <a href="https://authors.library.caltech.edu/records/w41x7-8bn13" target="_blank" rel="noopener noreferrer">Hopfield networks</a> used an energy landscape to describe attractor dynamics and associative memory. <a href="https://onlinelibrary.wiley.com/doi/10.1207/s15516709cog0901_7" target="_blank" rel="noopener noreferrer">Boltzmann machines</a> made these dynamics stochastic and showed how an energy function could be learned from data.</p>
-						<p>Later work developed more practical and general ways to learn energy functions. Hinton’s <a href="https://www.cs.toronto.edu/~hinton/absps/tr00-004.pdf" target="_blank" rel="noopener noreferrer"><em>Products of Experts</em></a> introduced contrastive divergence for training product-form latent-variable models. <a href="https://www.jmlr.org/papers/v6/hyvarinen05a.html" target="_blank" rel="noopener noreferrer">Score matching</a> and <a href="https://proceedings.mlr.press/v9/gutmann10a.html" target="_blank" rel="noopener noreferrer">noise-contrastive estimation</a> provided other ways to learn unnormalized densities without directly evaluating the partition function. <a href="https://cs.nyu.edu/~yann/research/ebm/" target="_blank" rel="noopener noreferrer">LeCun et al.</a> presented energy-based learning as a general framework for prediction and structured-output problems: an energy function scores candidate outputs conditioned on an input, and inference selects or searches for a low-energy output. Their tutorial therefore does cover inference-time prediction with EBMs, although primarily through optimization or discrete search over candidate outputs rather than through the MCMC-based sampling of continuous neural EBMs emphasized in later generative work.</p>
+						<p>Later work developed more practical and general ways to learn energy functions. Hinton’s <a href="https://www.cs.toronto.edu/~hinton/absps/tr00-004.pdf" target="_blank" rel="noopener noreferrer"><em>Products of Experts</em></a> introduced contrastive divergence for training product-form latent-variable models. <a href="https://www.jmlr.org/papers/v6/hyvarinen05a.html" target="_blank" rel="noopener noreferrer">Score matching</a> and <a href="https://proceedings.mlr.press/v9/gutmann10a.html" target="_blank" rel="noopener noreferrer">noise-contrastive estimation</a> provided other ways to learn unnormalized densities without directly evaluating the partition function. <a href="https://cs.nyu.edu/~yann/research/ebm/" target="_blank" rel="noopener noreferrer">LeCun et al.</a> unified these ideas as energy-based prediction: score candidate outputs, then optimize or search for a low-energy one. This work emphasized prediction and structured outputs, while later neural EBM research placed greater emphasis on MCMC sampling for generation.</p>
 						<p>In <a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener noreferrer">our 2019 paper</a>, we showed that MCMC-based training of continuous neural EBMs could scale to high-dimensional images and robotic trajectories, using Langevin dynamics for both learning and generation. We also studied compositional generation, reconstruction, robustness, continual learning, and trajectory prediction. The later work on this page develops one part of this picture further: energy functions as reusable representations that can be optimized, conditioned, and composed at inference time.</p>
 					</div>
 					<aside class="reading-list" aria-labelledby="FurtherReading">
@@ -521,7 +531,7 @@
 			</div>
 			<div class="col-md-12">
 			<br>
-				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. Through this approach, we can adopt an optimization-based sampling process at inference time, where samples are obtained by gradient descent on the learned landscape with adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with a unified equilibrium landscape, EqM offers a tighter bridge between flow and Energy-Based Models and a simple route to optimization-driven inference. </p>
+				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. At inference time, EqM initializes candidates from noise and generates samples by optimizing the learned landscape with gradient descent. Different initializations can produce different outputs, and the optimization can use adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with a unified equilibrium landscape, EqM offers a tighter bridge between flow and Energy-Based Models and a simple route to optimization-driven inference. </p>
 			</div>
 
 		</div><hr>
@@ -573,7 +583,7 @@
 			<br>
 				<p> Inference-time computation techniques, analogous to human System 2 Thinking, have recently become popular for improving model performances. However, most existing approaches suffer from several limitations: they are modality-specific (e.g., working only in text), problem-specific (e.g., verifiable domains like math and coding), or require additional supervision/training on top of unsupervised
 pretraining (e.g., verifiers or verifiable rewards). In this paper, we ask the question “Is it possible to generalize these System 2 Thinking approaches, and develop models that learn to think solely from unsupervised learning?” Interestingly, we find the answer is yes, by learning to explicitly verify the compatibility between inputs and candidate-predictions, and then re-framing prediction problems as optimization
-with respect to this verifier. Specifically, we train Energy-Based Transformers (EBTs)—a new class of Energy-Based Models (EBMs)—to assign an energy (unnormalized probability) value to every input and candidate-prediction pair, enabling predictions through gradient descent-based energy minimization until convergence. This formulation enables System 2 Thinking to emerge from unsupervised learning, making it modality and problem agnostic. Across both discrete (text) and continuous (visual) modalities, we find EBTs scale faster than the dominant Transformer++ approach during training, achieving an up to 35% higher scaling rate with respect to data, batch size, parameters, FLOPs, and depth. During inference, EBTs improve performance with System 2 Thinking (i.e., extra computation) by 29%
+with respect to this verifier. Specifically, we train Energy-Based Transformers (EBTs)—a new class of Energy-Based Models (EBMs)—to assign an energy to every input and candidate-prediction pair, with lower energy indicating greater compatibility, and obtain predictions through gradient-based energy minimization. This formulation enables System 2 Thinking to emerge from unsupervised learning, making it modality and problem agnostic. Across both discrete (text) and continuous (visual) modalities, we find EBTs scale faster than the dominant Transformer++ approach during training, achieving an up to 35% higher scaling rate with respect to data, batch size, parameters, FLOPs, and depth. During inference, EBTs improve performance with System 2 Thinking (i.e., extra computation) by 29%
 more than the Transformer++ on language tasks, and EBTs outperform Diffusion Transformers on image denoising while using fewer forward passes. Further, we find that System 2 Thinking with EBTs yields larger performance improvements on data that is farther out-of-distribution, and that EBTs achieve better results than existing models on most downstream tasks given the same or worse pretraining performance, suggesting that EBTs generalize better than existing approaches. Consequently, EBTs are a promising new paradigm for scaling both the learning and thinking capabilities of models. </p>
 			</div>
 
