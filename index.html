@@ -597,6 +597,30 @@ html{font-size:100%}
 				<noscript><p class="result-count">All publications are shown below. Enable JavaScript to use search and topic filters.</p></noscript>
 				<div class="publication-list" id="publication-list" role="list">
 
+		<div class="row" role="listitem" id="tem">
+			<div class="col-md-3">
+				<!-- Graphic uses original TEM project samples and reported results, CC BY-SA 4.0.
+				     Source: https://int-lee.github.io/scalable-ebm/ -->
+				<a href="https://int-lee.github.io/scalable-ebm/" target="_blank" rel="noopener noreferrer"><img class="img-fluid img-rounded" src="./files/paper/26-tem/tem.png" width="960" height="720" style="height:auto" alt="TEM generated ImageNet samples: FID-50K 3.82 at 256×256 and 8.24 at 512×512, without classifier-free guidance" loading="lazy" decoding="async"></a>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Scaling Transformer Energy-Based Models for High Quality Image Synthesis</h3>
+			<a href="mailto:bus6479@mit.edu">Jungsoo Lee</a>,
+			<a href="https://alexiglad.github.io/">Alexi Gladstone</a>,
+			<a href="https://yilundu.github.io/">Yilun Du</a>
+			<br>
+			<b><a href="https://arxiv.org/abs/2610.31889" target="_blank" rel="noopener noreferrer">arXiv 2026</a></b> <br>
+			<a href="https://int-lee.github.io/scalable-ebm/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2610.31889"> <small>[Paper]</small></a>
+			<a href="https://github.com/int-lee/TEM"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p>We introduce Transformer Energy-Based Models (TEM), scaling contrastively trained EBMs to high-quality ImageNet generation at 256×256 and 512×512. TEM learns a transformer energy function in latent space, sums energy heads at multiple depths, and aligns representations of real images with a frozen vision foundation model. TEM-XL achieves an FID-50K of 3.82 on class-conditional ImageNet 256×256, and TEM reaches 8.24 at 512×512, both without classifier-free guidance. The learned energy supports compositional generation by adding energies, zero-shot inpainting, and out-of-distribution detection. At inference time, additional sampling steps can refine generated images without retraining the model.</p>
+			</div>
+		</div><hr>
+
+
 		<div class="row" role="listitem">
 			<div class="col-md-3">
 				<img class="img-fluid img-rounded" src="./files/paper/25-eqm/eqm.png" style="border:1px solid black" alt="Equilibrium Matching generative samples" loading="lazy" decoding="async">
@@ -1241,6 +1265,7 @@ more than the Transformer++ on language tasks, and EBTs outperform Diffusion Tra
 		let activeFilter = 'all';
 
 		const topicAssignments = {
+			'Scaling Transformer Energy-Based Models for High Quality Image Synthesis': ['generation', 'composition', 'learning'],
 			'Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models': ['generation', 'learning'],
 			'Generalizable Reasoning through Compositional Energy Minimization': ['composition', 'reasoning'],
 			'Energy-Based Transformers are Scalable Learners and Thinkers': ['reasoning', 'learning'],
