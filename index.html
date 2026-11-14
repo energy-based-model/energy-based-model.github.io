@@ -383,7 +383,7 @@ html{font-size:100%}
 				<p class="hero-byline"><a href="https://yilundu.github.io/" rel="author">Yilun Du</a></p>
 				<p class="hero-lead">Energy-Based Models assign a numerical score, called energy, to each candidate output. An output might be an image, a scene interpretation, a reasoning solution, or a robot trajectory. Lower energy indicates a better fit to the input or constraints. The energy values across possible outputs form an energy landscape. We can search this landscape for one low-energy solution or sample from it to obtain several plausible solutions. We can also compose models by adding their energies and searching for outputs with low total energy.</p>
 				<p class="hero-note">Our research develops energy landscapes as reusable representations. After training, we combine and search these landscapes to solve new generation, reasoning, and planning problems.</p>
-				<p class="hero-actions"><a href="#Publications">Browse publications ↓</a><a href="https://arxiv.org/abs/1903.08689">Implicit generation with EBMs (2019) ↗</a></p>
+				<p class="hero-actions"><a href="#Publications">Browse publications ↓</a><a href="https://arxiv.org/abs/2611.14383">Tutorial: an energy-based perspective on ML (2026) ↗</a><a href="https://arxiv.org/abs/1903.08689">Implicit generation with EBMs (2019) ↗</a></p>
 
 			</div>
 		</header>
@@ -400,7 +400,8 @@ html{font-size:100%}
 						<p>The same energy function can also define a probability distribution over possible outputs. Exponentiating the negative energy gives each output a positive weight, so lower-energy outputs receive larger weights. Dividing by the sum or integral of these weights, called the partition function, normalizes the distribution. A sampling procedure can then generate different plausible outputs according to this distribution.</p>
 						<p>An EBM represents a probability distribution through a single energy function over complete outputs. Autoregressive models factorize the distribution into a product of conditional probabilities, each conditioned on the variables generated so far. Diffusion models introduce noisy intermediate states and factorize the generative process into conditional transitions that progressively remove noise. An EBM does not require either a variable ordering or a sequence of noise levels to define its distribution. Because the energy scores all output variables together, it provides a direct way to represent global dependencies among them. This simple representation comes at a computational cost. Maximum-likelihood training typically requires repeated sampling from the current model, which can be slow and difficult in high dimensions.</p>
 						<p>We can also evaluate the same candidate with several energy functions. In <a href="https://arxiv.org/abs/1909.06878" target="_blank" rel="noopener noreferrer">robot planning</a>, one energy can assess whether a trajectory follows the robot’s dynamics, meaning how states change under actions, and another can score how close its final state is to a goal. Adding the energies gives a single score for both requirements. We then adjust the trajectory to reduce this total energy. Weights control the balance between the requirements. Changing the goal energy creates a new planning problem without retraining the dynamics model.</p>
-						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, develops this approach: learning reusable energy landscapes from data, then composing and optimizing them at inference time to solve tasks not represented directly in the training set.</p>
+						<p>My PhD thesis, <a href="https://yilundu.github.io/thesis.pdf" target="_blank" rel="noopener noreferrer"><em>Learning Generalizable Systems by Learning Composable Energy Landscapes</em></a>, describes this approach: learning reusable energy landscapes from data, then composing and optimizing them at inference time to solve tasks not represented directly in the training set.</p>
+						<p>For a longer introduction, see <a href="https://arxiv.org/abs/2611.14383" target="_blank" rel="noopener noreferrer"><em>An Energy-Based Perspective on Machine Learning</em></a>, a tutorial with <a href="https://bo-dai.github.io/" target="_blank" rel="noopener noreferrer">Bo Dai</a>. It describes every EBM by three choices: the energy, the inference procedure, and the learning method. Classifiers, generative models, representation learning methods, and planning algorithms then appear as EBMs that differ in these choices.</p>
 					</div>
 					<div class="key-points" aria-label="Key properties of Energy-Based Models">
 						<div class="key-point"><strong>Flexible representation</strong><span>One function scores complete candidate outputs and can define a probability distribution over them.</span></div>
@@ -569,6 +570,7 @@ html{font-size:100%}
 							<li>Yann LeCun et al. (2006), <cite><a href="https://cs.nyu.edu/~yann/research/ebm/" target="_blank" rel="noopener noreferrer">A Tutorial on Energy-Based Learning</a></cite>. Energy-based prediction through inference over candidate outputs, including optimization and search for low-energy configurations.</li>
 							<li>Michael Gutmann and Aapo Hyvärinen (2010), <cite><a href="https://proceedings.mlr.press/v9/gutmann10a.html" target="_blank" rel="noopener noreferrer">Noise-Contrastive Estimation</a></cite>. Learning unnormalized models by distinguishing data from noise.</li>
 							<li>Yilun Du and Igor Mordatch (2019), <cite><a href="https://arxiv.org/abs/1903.08689" target="_blank" rel="noopener noreferrer">Implicit Generation and Generalization in Energy-Based Models</a></cite>. Scaling continuous neural EBMs and Langevin sampling to high-dimensional generation, composition, and generalization.</li>
+							<li>Bo Dai and Yilun Du (2026), <cite><a href="https://arxiv.org/abs/2611.14383" target="_blank" rel="noopener noreferrer">An Energy-Based Perspective on Machine Learning</a></cite>. Energy, inference, and learning as one framework across generative models, representation learning, and decision making.</li>
 						</ol>
 					</aside>
 				</div>
@@ -597,7 +599,6 @@ html{font-size:100%}
 				<noscript><p class="result-count">All publications are shown below. Enable JavaScript to use search and topic filters.</p></noscript>
 				<div class="publication-list" id="publication-list" role="list">
 
-
 		<div class="row" role="listitem">
 			<div class="col-md-3">
 				<a href="https://arxiv.org/abs/2611.14383" target="_blank" rel="noopener noreferrer"><img class="img-fluid img-rounded" src="./files/paper/26-ebm-tutorial/ebm_tutorial.png" style="border:1px solid black" alt="An Energy-Based Perspective on Machine Learning tutorial" loading="lazy" decoding="async"></a>
@@ -618,7 +619,7 @@ html{font-size:100%}
 
 		<div class="row" role="listitem">
 			<div class="col-md-3">
-				<img class="img-fluid img-rounded" src="./files/paper/26-ebr/ebr.png" style="border:1px solid black" alt="Learned energy landscape over latent reasoning states" loading="lazy" decoding="async">
+				<img class="img-fluid img-rounded" src="./files/paper/26-ebr/ebr.png" style="border:1px solid black" alt="Energy-Based Reasoner descending an energy landscape to solve a Sudoku puzzle" loading="lazy" decoding="async">
 			</div>
 			<div class="col-md-9">
 			<h3 class="paper-title">Energy-Based Reasoners: Your Recurrent Reasoner Should Be an Energy-Based Model</h3>
@@ -665,28 +666,7 @@ html{font-size:100%}
 
 		<div class="row" role="listitem">
 			<div class="col-md-3">
-				<img class="img-fluid img-rounded" src="./files/paper/25-eqm/eqm.png" style="border:1px solid black" alt="Equilibrium Matching generative samples" loading="lazy" decoding="async">
-			</div>
-			<div class="col-md-9">
-			<h3 class="paper-title">Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models</h3>
-            <a href="https://scholar.google.com/citations?user=KuFJC30AAAAJ&amp;hl=en">Runqian Wang</a>,
-            <a href="https://yilundu.github.io/">Yilun Du</a>
-            <br>
-			<b><a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">NeurIPS 2026</a></b> <br>
-			<a href="https://raywang4.github.io/equilibrium_matching/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
-			<a href="https://arxiv.org/abs/2510.02300"> <small>[Paper]</small></a>
-			<a href="https://github.com/raywang4/EqM"> <small>[Code]</small></a>
-			</div>
-			<div class="col-md-12">
-			<br>
-				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. At inference time, EqM initializes candidates from noise and generates samples by optimizing the learned landscape with gradient descent. Different initializations can produce different outputs, and the optimization can use adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with an equilibrium landscape, EqM connects flow and Energy-Based Models through optimization-based inference. </p>
-			</div>
-
-		</div><hr>
-
-		<div class="row" role="listitem">
-			<div class="col-md-3">
-				<img class="img-fluid img-rounded" src="./files/paper/26-gem/gem.png" style="border:1px solid black" alt="Graph Energy Matching sampling molecular graphs from noise" loading="lazy" decoding="async">
+				<img class="img-fluid img-rounded" src="./files/paper/26-gem/gem.png" style="border:1px solid black" alt="Graph Energy Matching transport and mixing phases, from noisy graphs to molecules" loading="lazy" decoding="async">
 			</div>
 			<div class="col-md-9">
 			<h3 class="paper-title">Graph Energy Matching: Transport-Aligned Energy-Based Modeling for Graph Generation</h3>
@@ -707,6 +687,27 @@ html{font-size:100%}
 			<br>
 				<p>Energy-based models over discrete structures such as graphs capture relative likelihoods, so constraints and desired properties can be imposed directly at inference time. Sampling from discrete EBMs has been difficult, however: spurious local minima away from the data trap samplers and destabilize training, leaving a quality gap relative to discrete diffusion models. We introduce Graph Energy Matching (GEM), which brings the transport-map view of the Jordan–Kinderlehrer–Otto (JKO) scheme to graphs. GEM learns a single permutation-invariant energy that guides discrete transport from noise toward high-likelihood graphs and then refines samples within those regions. An energy-based switch moves sampling from fast, gradient-guided transport to a local mixing phase that explores the learned distribution. On the MOSES and QM9 molecular benchmarks, GEM is competitive with or better than strong discrete diffusion models on most reported metrics. Because it models relative likelihood explicitly, GEM also supports compositional generation, property-constrained sampling, and interpolation between graphs.</p>
 			</div>
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="./files/paper/25-eqm/eqm.png" style="border:1px solid black" alt="Equilibrium Matching generative samples" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models</h3>
+            <a href="https://scholar.google.com/citations?user=KuFJC30AAAAJ&amp;hl=en">Runqian Wang</a>,
+            <a href="https://yilundu.github.io/">Yilun Du</a>
+            <br>
+			<b><a href="https://arxiv.org/abs/2510.02300" target="_blank" rel="noopener noreferrer">NeurIPS 2026</a></b> <br>
+			<a href="https://raywang4.github.io/equilibrium_matching/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2510.02300"> <small>[Paper]</small></a>
+			<a href="https://github.com/raywang4/EqM"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. At inference time, EqM initializes candidates from noise and generates samples by optimizing the learned landscape with gradient descent. Different initializations can produce different outputs, and the optimization can use adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with an equilibrium landscape, EqM connects flow and Energy-Based Models through optimization-based inference. </p>
+			</div>
+
 		</div><hr>
 
 		<div class="row" role="listitem">
@@ -1332,7 +1333,10 @@ more than the Transformer++ on language tasks, and EBTs outperform Diffusion Tra
 		let activeFilter = 'all';
 
 		const topicAssignments = {
+			'An Energy-Based Perspective on Machine Learning': ['learning', 'generation', 'reasoning', 'composition'],
+			'Energy-Based Reasoners: Your Recurrent Reasoner Should Be an Energy-Based Model': ['reasoning', 'learning'],
 			'Scaling Transformer Energy-Based Models for High Quality Image Synthesis': ['generation', 'composition', 'learning'],
+			'Graph Energy Matching: Transport-Aligned Energy-Based Modeling for Graph Generation': ['generation', 'composition', 'learning'],
 			'Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models': ['generation', 'learning'],
 			'Generalizable Reasoning through Compositional Energy Minimization': ['composition', 'reasoning'],
 			'Energy-Based Transformers are Scalable Learners and Thinkers': ['reasoning', 'learning'],
