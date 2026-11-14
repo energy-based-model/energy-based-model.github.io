@@ -597,6 +597,48 @@ html{font-size:100%}
 				<noscript><p class="result-count">All publications are shown below. Enable JavaScript to use search and topic filters.</p></noscript>
 				<div class="publication-list" id="publication-list" role="list">
 
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<a href="https://arxiv.org/abs/2611.14383" target="_blank" rel="noopener noreferrer"><img class="img-fluid img-rounded" src="./files/paper/26-ebm-tutorial/ebm_tutorial.png" style="border:1px solid black" alt="An Energy-Based Perspective on Machine Learning tutorial" loading="lazy" decoding="async"></a>
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">An Energy-Based Perspective on Machine Learning</h3>
+			<a href="https://bo-dai.github.io/">Bo Dai</a>,
+			<a href="https://yilundu.github.io/">Yilun Du</a>
+			<br>
+			<b><a href="https://arxiv.org/abs/2611.14383" target="_blank" rel="noopener noreferrer">arXiv 2026</a></b> <br>
+			<a href="https://arxiv.org/abs/2611.14383"> <small>[Paper]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p>This tutorial presents Energy-Based Models as a unifying lens on machine learning. Each model is described by three design choices: an energy function that defines what is represented, an inference procedure that samples from or minimizes the energy, and a learning objective that fits it to data. The tutorial first develops these components, from sampling and variational inference to training by maximum likelihood, noise-contrastive estimation, pseudolikelihood, score matching, and adversarial objectives, and shows that these objectives take a common contrastive form. Under this view, approaches usually studied separately, including classifiers, GANs, normalizing flows, diffusion and autoregressive models, representation learning, reinforcement learning and planning, and inference-time computation with verifiers, become EBMs that differ mainly in how they handle sampling and the partition function. The framework also points to new algorithms, obtained by changing one design choice while keeping the others, and treats adding energies as a principled way to combine separately learned models at inference time.</p>
+			</div>
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="./files/paper/26-ebr/ebr.png" style="border:1px solid black" alt="Learned energy landscape over latent reasoning states" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Energy-Based Reasoners: Your Recurrent Reasoner Should Be an Energy-Based Model</h3>
+			<a href="https://wwillchen.github.io/">William Xingxu Chen</a>,
+			<a href="https://alexiglad.github.io/">Alexi Gladstone</a>,
+			<a href="https://lizeyu090312.github.io/">Zeyu Michael Li</a>,
+			<a href="https://blender.cs.illinois.edu/hengji.html">Heng Ji</a>,
+			<a href="https://yilundu.github.io/">Yilun Du</a>
+			<br>
+			<b><a href="https://arxiv.org/abs/2611.08977" target="_blank" rel="noopener noreferrer">arXiv 2026</a></b> <br>
+			<a href="https://energy-based-reasoners.github.io/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2611.08977"> <small>[Paper]</small></a>
+			<a href="https://github.com/wwillchen/ebr"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p>Looped models reason by repeatedly applying the same recurrent block to a latent state, which increases effective depth without adding parameters. Their updates, however, are not tied to an explicit measure of progress, so it is unclear how to improve the current state or when to stop. We introduce Energy-Based Reasoners (EBRs), which learn an energy over latent reasoning states and implement each looped update as a gradient step on that energy. The energy ranks candidate states, so an EBR returns the lowest-energy prediction among its samples, while the gradient drives refinement and signals convergence for adaptive stopping. To shape the landscape across more states and capture multiple solutions, we train EBRs with state-based explorative modeling, which runs several descent trajectories in parallel and supervises the one best matched to a valid solution. On Sudoku-Extreme, Maze-Hard, N-Queens, and Graph Coloring, EBRs match or outperform prior recurrent reasoners. They reach 99.9% accuracy on Sudoku-Extreme with 345× less inference compute than the next-best model at comparable training compute, and on multi-solution tasks they achieve the best coverage of distinct valid solutions while keeping single-sample accuracy near 100%.</p>
+			</div>
+		</div><hr>
+
 		<div class="row" role="listitem" id="tem">
 			<div class="col-md-3">
 				<!-- Graphic uses original TEM project samples and reported results, CC BY-SA 4.0.
@@ -640,6 +682,31 @@ html{font-size:100%}
 				<p> We introduce Equilibrium Matching (EqM), a generative modeling framework built from an equilibrium dynamics perspective. EqM discards the non-equilibrium, time-conditional dynamics in traditional diffusion and flow-based generative models and instead learns the equilibrium gradient of an implicit energy landscape. At inference time, EqM initializes candidates from noise and generates samples by optimizing the learned landscape with gradient descent. Different initializations can produce different outputs, and the optimization can use adjustable step sizes, adaptive optimizers, and adaptive compute. EqM surpasses the generation performance of diffusion/flow models empirically, achieving an FID of 1.90 on ImageNet 256×256. EqM is also theoretically justified to learn and sample from the data manifold. Beyond generation, EqM is a flexible framework that naturally handles tasks including partially noised image denoising, OOD detection, and image composition. By replacing time-conditional velocities with an equilibrium landscape, EqM connects flow and Energy-Based Models through optimization-based inference. </p>
 			</div>
 
+		</div><hr>
+
+		<div class="row" role="listitem">
+			<div class="col-md-3">
+				<img class="img-fluid img-rounded" src="./files/paper/26-gem/gem.png" style="border:1px solid black" alt="Graph Energy Matching sampling molecular graphs from noise" loading="lazy" decoding="async">
+			</div>
+			<div class="col-md-9">
+			<h3 class="paper-title">Graph Energy Matching: Transport-Aligned Energy-Based Modeling for Graph Generation</h3>
+			<a href="https://michalbalcerak.ai/">Michal Balcerak</a>,
+			<a href="https://www.dqbm.uzh.ch/en/research/menze/team/team-supro.html">Suprosanna Shit</a>,
+			<a href="https://www.dqbm.uzh.ch/en/research/menze/team/team-chinmay.html">Chinmay Prabhakar</a>,
+			<a href="https://seas.harvard.edu/person/sebastian-kaltenbach">Sebastian Kaltenbach</a>,
+			<a href="https://malbergo.me/">Michael S. Albergo</a>,
+			<a href="https://yilundu.github.io/">Yilun Du*</a>,
+			<a href="https://www.dqbm.uzh.ch/en/research/menze.html">Bjoern Menze*</a>
+			<br>
+			<b><a href="https://arxiv.org/abs/2603.23398" target="_blank" rel="noopener noreferrer">arXiv 2026</a></b> <br>
+			<a href="https://michalbalcerak.ai/graph-energy-matching/" target="_blank" rel="noopener noreferrer"> <small>[Project]</small></a>
+			<a href="https://arxiv.org/abs/2603.23398"> <small>[Paper]</small></a>
+			<a href="https://github.com/m1balcerak/GraphEnergyMatching"> <small>[Code]</small></a>
+			</div>
+			<div class="col-md-12">
+			<br>
+				<p>Energy-based models over discrete structures such as graphs capture relative likelihoods, so constraints and desired properties can be imposed directly at inference time. Sampling from discrete EBMs has been difficult, however: spurious local minima away from the data trap samplers and destabilize training, leaving a quality gap relative to discrete diffusion models. We introduce Graph Energy Matching (GEM), which brings the transport-map view of the Jordan–Kinderlehrer–Otto (JKO) scheme to graphs. GEM learns a single permutation-invariant energy that guides discrete transport from noise toward high-likelihood graphs and then refines samples within those regions. An energy-based switch moves sampling from fast, gradient-guided transport to a local mixing phase that explores the learned distribution. On the MOSES and QM9 molecular benchmarks, GEM is competitive with or better than strong discrete diffusion models on most reported metrics. Because it models relative likelihood explicitly, GEM also supports compositional generation, property-constrained sampling, and interpolation between graphs.</p>
+			</div>
 		</div><hr>
 
 		<div class="row" role="listitem">
